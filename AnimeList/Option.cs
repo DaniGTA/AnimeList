@@ -15,8 +15,14 @@ namespace AnimeList
     {
        public int list_id = 0;
        public int current_table_config;
-       public Form1 form_cache;
-       public Option(Form1 form)
+        private int item_counter = 0;
+        string[] position_cache = new string[10];
+        public int del_button_number = 0;
+        public int add_button_position = 100;
+        public bool check_category = false;
+        public Form1 form_cache;
+   
+        public Option(Form1 form)
         {
             list_id=form.list_id;
             InitializeComponent();
@@ -25,6 +31,7 @@ namespace AnimeList
             color_picker.Text = form.color_picker;
             rating.Text = form.rating_text;
             episode_counter.Text = form.counter_text;
+            remove_table.Text = form.remove_table_text;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -41,8 +48,146 @@ namespace AnimeList
 
         private void show_rating_option_Click(object sender, EventArgs e)
         {
+            switch_table_options(false);
+            add_category.Visible = true;
+            category.Visible = true;
+            check_category = true;
+            try
+            {
+                foreach (string category in form_cache.Categorys)
+                {
+                    add_button_with_text(category);
+                }
+            }
+            catch (NullReferenceException)
+            {
+            }
 
         }
+        public void add_button_with_text(string text = "")
+        {
+            if (item_counter <= 6)
+            {
+                bool free_position = false;
+                int free_position_button = 0;
+                int free_position_textbox = 0;
+                string[] one_time_use = new string[10];
+                int counter_x = 0;
+
+                foreach (string position in position_cache)
+                {
+                    try
+                    {
+                        if (position.Length == 0)
+                        {
+
+                        }
+                        else
+                        {
+                            if (free_position)
+                            {
+                                one_time_use[counter_x] = position;
+                            }
+                            else
+                            {
+                                Debug.WriteLine("Freie plätze wurde geladen");
+                                free_position = true;
+                                string[] position_split = position.Split('|');
+                                free_position_textbox = Int32.Parse(position_split[0]);
+                                free_position_button = Int32.Parse(position_split[1]);
+                            }
+                        }
+                    }
+                    catch (NullReferenceException)
+                    {
+                        if (free_position)
+                        {
+                            one_time_use[counter_x] = position;
+                        }
+                    }
+                    counter_x++;
+                }
+                position_cache = one_time_use;
+                del_button_number++;
+                item_counter++;
+                Button del_button = new Button();
+                del_button.Name = del_button_number.ToString();
+                del_button.Text = "X";
+                del_button.Visible = true;
+                del_button.FlatStyle = FlatStyle.Flat;
+                if (free_position)
+                {
+                    del_button.Location = new Point(free_position_button, 230);
+                }
+                else
+                {
+                    add_button_position = add_button_position + 100;
+                    del_button.Location = new Point(100 + add_button_position, 230);
+                }
+                del_button.TabStop = false;
+                del_button.FlatAppearance.BorderSize = 0;
+                del_button.Height = 23;
+                del_button.Width = 23;
+                del_button.Click += new EventHandler(question_4_remove_content);
+                this.Controls.Add(del_button);
+
+                TextBox input_box = new TextBox();
+                input_box.Width = 85;
+                input_box.Height = 30;
+                input_box.BorderStyle = BorderStyle.None;
+                input_box.Visible = true;
+                input_box.Name = "input_box_" + del_button_number.ToString();
+                input_box.Text = text;
+                if (free_position)
+                {
+                    input_box.Location = new Point(free_position_textbox, 235);
+                }
+                else
+                {
+                    input_box.Location = new Point(30 + add_button_position, 235);
+                }
+                this.Controls.Add(input_box);
+            }
+        }
+        public void question_4_remove_content(object sender, EventArgs e)
+        {
+
+            TextBox tbx = this.Controls.Find("input_box_" + (sender as Button).Name, true).FirstOrDefault() as TextBox;
+            tbx.Text = "";
+            string[] one_use_cache = new string[10];
+            item_counter--;
+            int counter_x = 0;
+            bool already_added = false;
+            foreach (string position in position_cache)
+            {
+                try
+                {
+                    if (position.Length == 0)
+                    {
+                        one_use_cache[counter_x] = tbx.Location.X.ToString() + "|" + (sender as Button).Location.X.ToString();
+                    }
+                    else
+                    {
+                        one_use_cache[counter_x] = position;
+                    }
+                }
+                catch (NullReferenceException)
+                {
+                    if (already_added) { }
+                    else
+                    {
+                        already_added = true;
+                        one_use_cache[counter_x] = tbx.Location.X.ToString() + "|" + (sender as Button).Location.X.ToString();
+                    }
+                }
+                counter_x++;
+            }
+            position_cache = one_use_cache;
+            this.Controls.Remove(tbx);
+            this.Controls.Remove((sender as Button));
+        }
+
+ 
         public void load_table_options()
         {
             int x = 0;
@@ -146,6 +291,9 @@ namespace AnimeList
             color_picker.Visible = state;
             rating.Visible = state;
             episode_counter.Visible = state;
+            remove_table.Visible = state;
+            add_category.Visible = false;
+            category.Visible = false;
             if (state)
             {
 
@@ -153,6 +301,7 @@ namespace AnimeList
             {
                 current_table_config = -1;
             }
+            remove_categorys();
         }
 
         private void table_title_TextChanged(object sender, EventArgs e)
@@ -195,6 +344,68 @@ namespace AnimeList
                 button.Tag = "counter_rating";
             }
         }
-        
+
+        private void remove_table_Click(object sender, EventArgs e)
+        {
+            DataGridView dgv = form_cache.Controls.Find("table_" + current_table_config.ToString(), true).FirstOrDefault() as DataGridView;
+            Button button = this.Controls.Find("options" + current_table_config.ToString(), true).FirstOrDefault() as Button;
+            Button button_2 = this.Controls.Find("options" + current_table_config.ToString(), true).FirstOrDefault() as Button;
+            form_cache.remove_button_from_panel(button);
+            table_options_panel.Controls.Remove(button_2);
+            form_cache.Controls.Remove(dgv);
+            switch_table_options(false);
+        }
+
+        private void add_category_Click_1(object sender, EventArgs e)
+        {
+            add_button_with_text();
+        }
+
+        private void Option_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            remove_categorys();
+        }
+        private void remove_categorys()
+        {
+            if (check_category)
+            {
+                check_category = false;
+                int x = 0;
+                List<string> category_list = new List<string>();
+                while (x != del_button_number+1)
+                {
+                    try
+                    {
+                        TextBox tbx = this.Controls.Find("input_box_" + x.ToString(), true).FirstOrDefault() as TextBox;
+                        Button btn = this.Controls.Find(x.ToString(), true).FirstOrDefault() as Button;
+                        try
+                        {
+                            if (tbx.Text.Length == 0)
+                            {
+
+                            }
+                            else
+                            {
+                                Debug.WriteLine("add to list " + tbx.Text);
+                                category_list.Add(tbx.Text);
+                            }
+                        }
+                        catch (NullReferenceException)
+                        {
+
+                        }
+                        this.Controls.Remove(tbx);
+                        this.Controls.Remove(btn);
+                    }
+                    catch (NullReferenceException) { }
+                    x++;
+                }
+                form_cache.Categorys = category_list.ToArray();
+                position_cache = new string[10];
+                item_counter = 0;
+                del_button_number = 0;
+                add_button_position = 100;
+            }
+        }
     }
 }

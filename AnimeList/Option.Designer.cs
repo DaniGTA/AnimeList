@@ -34,13 +34,15 @@
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.allgemeineoptions = new System.Windows.Forms.Label();
-            this.button3 = new System.Windows.Forms.Button();
             this.table_options_panel = new System.Windows.Forms.FlowLayoutPanel();
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.color_picker = new System.Windows.Forms.Button();
             this.rating = new System.Windows.Forms.CheckBox();
             this.episode_counter = new System.Windows.Forms.CheckBox();
             this.table_title = new System.Windows.Forms.TextBox();
+            this.remove_table = new System.Windows.Forms.Button();
+            this.category = new System.Windows.Forms.Label();
+            this.add_category = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -114,15 +116,6 @@
             this.allgemeineoptions.Text = "AllgemeineOptionen";
             this.allgemeineoptions.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // button3
-            // 
-            this.button3.Location = new System.Drawing.Point(57, 201);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(75, 23);
-            this.button3.TabIndex = 6;
-            this.button3.Text = "button3";
-            this.button3.UseVisualStyleBackColor = true;
-            // 
             // table_options_panel
             // 
             this.table_options_panel.AutoScroll = true;
@@ -139,7 +132,7 @@
             this.color_picker.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
             this.color_picker.Location = new System.Drawing.Point(201, 441);
             this.color_picker.Name = "color_picker";
-            this.color_picker.Size = new System.Drawing.Size(98, 23);
+            this.color_picker.Size = new System.Drawing.Size(146, 23);
             this.color_picker.TabIndex = 8;
             this.color_picker.Text = "color_picker";
             this.color_picker.UseVisualStyleBackColor = false;
@@ -188,18 +181,61 @@
             this.table_title.Visible = false;
             this.table_title.TextChanged += new System.EventHandler(this.table_title_TextChanged);
             // 
+            // remove_table
+            // 
+            this.remove_table.BackColor = System.Drawing.Color.Maroon;
+            this.remove_table.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.remove_table.Font = new System.Drawing.Font("39 Smooth", 9F);
+            this.remove_table.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.remove_table.Location = new System.Drawing.Point(201, 412);
+            this.remove_table.Name = "remove_table";
+            this.remove_table.Size = new System.Drawing.Size(146, 23);
+            this.remove_table.TabIndex = 13;
+            this.remove_table.Text = "remove";
+            this.remove_table.UseVisualStyleBackColor = false;
+            this.remove_table.Visible = false;
+            this.remove_table.Click += new System.EventHandler(this.remove_table_Click);
+            // 
+            // category
+            // 
+            this.category.AutoSize = true;
+            this.category.Font = new System.Drawing.Font("39 Smooth", 9F);
+            this.category.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.category.Location = new System.Drawing.Point(204, 208);
+            this.category.Name = "category";
+            this.category.Size = new System.Drawing.Size(58, 14);
+            this.category.TabIndex = 14;
+            this.category.Text = "category";
+            this.category.Visible = false;
+            // 
+            // add_category
+            // 
+            this.add_category.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.add_category.Font = new System.Drawing.Font("39 Smooth", 9F);
+            this.add_category.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.add_category.Location = new System.Drawing.Point(268, 208);
+            this.add_category.Name = "add_category";
+            this.add_category.Size = new System.Drawing.Size(146, 23);
+            this.add_category.TabIndex = 15;
+            this.add_category.Text = "add_category";
+            this.add_category.UseVisualStyleBackColor = false;
+            this.add_category.Visible = false;
+            this.add_category.Click += new System.EventHandler(this.add_category_Click_1);
+            // 
             // Option
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(47)))), ((int)(((byte)(50)))), ((int)(((byte)(56)))));
             this.ClientSize = new System.Drawing.Size(896, 523);
+            this.Controls.Add(this.add_category);
+            this.Controls.Add(this.category);
+            this.Controls.Add(this.remove_table);
             this.Controls.Add(this.table_title);
             this.Controls.Add(this.episode_counter);
             this.Controls.Add(this.rating);
             this.Controls.Add(this.color_picker);
             this.Controls.Add(this.table_options_panel);
-            this.Controls.Add(this.button3);
             this.Controls.Add(this.allgemeineoptions);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
@@ -209,6 +245,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "Option";
             this.Text = "Option";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Option_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -223,12 +260,14 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Label allgemeineoptions;
-        private System.Windows.Forms.Button button3;
         private System.Windows.Forms.FlowLayoutPanel table_options_panel;
         private System.Windows.Forms.ColorDialog colorDialog1;
         private System.Windows.Forms.Button color_picker;
         private System.Windows.Forms.CheckBox rating;
         private System.Windows.Forms.CheckBox episode_counter;
         private System.Windows.Forms.TextBox table_title;
+        private System.Windows.Forms.Button remove_table;
+        private System.Windows.Forms.Label category;
+        private System.Windows.Forms.Button add_category;
     }
 }

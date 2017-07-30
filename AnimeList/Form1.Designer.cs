@@ -71,6 +71,7 @@
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.move_anime_panel = new System.Windows.Forms.FlowLayoutPanel();
             this.move_to_table_text = new System.Windows.Forms.Label();
+            this.button1 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.anime_pic_preview)).BeginInit();
@@ -211,7 +212,7 @@
             this.pictureBox2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.pictureBox2.Cursor = System.Windows.Forms.Cursors.Hand;
             this.pictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox2.Image")));
-            this.pictureBox2.Location = new System.Drawing.Point(830, 12);
+            this.pictureBox2.Location = new System.Drawing.Point(801, 12);
             this.pictureBox2.Name = "pictureBox2";
             this.pictureBox2.Size = new System.Drawing.Size(23, 23);
             this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -221,7 +222,7 @@
             // 
             // mal_username_label
             // 
-            this.mal_username_label.Location = new System.Drawing.Point(673, 12);
+            this.mal_username_label.Location = new System.Drawing.Point(644, 12);
             this.mal_username_label.Name = "mal_username_label";
             this.mal_username_label.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.mal_username_label.Size = new System.Drawing.Size(151, 23);
@@ -551,12 +552,26 @@
             this.move_to_table_text.Size = new System.Drawing.Size(0, 13);
             this.move_to_table_text.TabIndex = 43;
             // 
+            // button1
+            // 
+            this.button1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button1.ForeColor = System.Drawing.Color.WhiteSmoke;
+            this.button1.Location = new System.Drawing.Point(828, 12);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(25, 23);
+            this.button1.TabIndex = 44;
+            this.button1.Text = "-";
+            this.button1.UseVisualStyleBackColor = false;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(47)))), ((int)(((byte)(50)))), ((int)(((byte)(56)))));
             this.ClientSize = new System.Drawing.Size(896, 523);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.move_to_table_text);
             this.Controls.Add(this.move_anime_panel);
             this.Controls.Add(this.add_category_finish);
@@ -660,6 +675,7 @@
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private System.Windows.Forms.FlowLayoutPanel move_anime_panel;
         private System.Windows.Forms.Label move_to_table_text;
+        private System.Windows.Forms.Button button1;
     }
 }
 

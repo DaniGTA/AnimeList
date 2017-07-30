@@ -51,6 +51,7 @@ namespace AnimeList
         private string Question_2;
         private string Question_3;
         private string Question_4;
+        public string remove_table_text;
         private bool IsOnlineCheckActive;
         public string image_text;
         public bool is_loading = false;
@@ -62,6 +63,7 @@ namespace AnimeList
         public string color_picker;
         public string rating_text;
         public string counter_text;
+        public string category_text;
         public string image_folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "table_images");
         public string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "table_config.cfg");
         public Form1()
@@ -111,6 +113,8 @@ namespace AnimeList
             {
 
                 case "ger":
+                    category_text = "kategorien";
+                    remove_table_text = "Tabelle entfernen";
                     color_picker = "Farbe wählen";
                     rating_text = "Bewertungen ein/aus schalten für die Tabelle";
                     counter_text = "Folgen zähler ein/aus schalten für die Tabelle";
@@ -145,6 +149,8 @@ namespace AnimeList
                     break;
 
                 default:
+                    category_text = "Categorys";
+                    remove_table_text = "remove table";
                     color_picker = "Color picker";
                     rating_text = "Rating on/off for the table";
                     counter_text = "episode counter for the table on/off";
@@ -522,13 +528,15 @@ namespace AnimeList
 
         private void open_options_Click(object sender, EventArgs e)
         {
-            Option options_form = new Option(this);
-            options_form.list_id = list_id;
-            options_form.StartPosition = FormStartPosition.CenterParent;
-            options_form.ShowDialog();
-            list_id = options_form.list_id;
-            unload();
-            load();
+
+                Option options_form = new Option(this);
+                options_form.list_id = list_id;
+                options_form.StartPosition = FormStartPosition.CenterParent;
+                options_form.ShowDialog();
+                list_id = options_form.list_id;
+                unload();
+                load();
+
         }
 
         //Question 2 Begin
@@ -1197,11 +1205,10 @@ namespace AnimeList
                                     DataGridViewComboBoxColumn combobox = new DataGridViewComboBoxColumn();
                                     combobox.Name = category;
                                     combobox.HeaderText = category;
-                                    combobox.FillWeight = 15;
                                     combobox.Resizable = DataGridViewTriState.False;
                                     combobox.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
                                     combobox.FlatStyle = FlatStyle.Flat;
-                                    combobox.MinimumWidth = 20;
+                                    combobox.Width = 10;
                                     combobox.DefaultCellStyle.NullValue = null;
                                     combobox.Items.Add("★");
                                     combobox.Items.Add("★★");
@@ -1216,11 +1223,9 @@ namespace AnimeList
                                     DataGridViewComboBoxColumn combobox = new DataGridViewComboBoxColumn();
                                     combobox.Name = category;
                                     combobox.HeaderText = category;
-                                    combobox.FillWeight = 15;
                                     combobox.Resizable = DataGridViewTriState.False;
                                     combobox.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
                                     combobox.FlatStyle = FlatStyle.Flat;
-                                    combobox.MinimumWidth = 20;
                                     combobox.DefaultCellStyle.NullValue = null;
                                     combobox.Items.Add("👍");
                                     combobox.Items.Add("👎");
@@ -1321,7 +1326,7 @@ namespace AnimeList
                             if (cache <= Int32.Parse(number_input.Text))
                             {
                                 Debug.WriteLine("All OK");
-                             
+
                             }
                             else
                             {
@@ -1340,7 +1345,7 @@ namespace AnimeList
                     if (rating_mode == 2 || rating_mode == 3)
                     {
                         Debug.WriteLine("Save");
-                      
+
                     }
                 }
                 else
@@ -1386,7 +1391,7 @@ namespace AnimeList
                 {
                     try
                     {
-                       
+
                             DataGridView dgv = this.Controls.Find("table_" + x.ToString(), true).FirstOrDefault() as DataGridView;
                             if (dgv.Visible)
                             {
@@ -1405,7 +1410,7 @@ namespace AnimeList
                                         }
                                     }
                                 }
-                            
+
                         }
                     }
                     catch (NullReferenceException) { }
@@ -1766,6 +1771,14 @@ namespace AnimeList
                 catch (NullReferenceException) { }
                 x++;
             }
+        }
+        public void remove_button_from_panel(Button btn)
+        {
+            flowLayoutPanel1.Controls.Remove(btn);
+        }
+        private void button1_Click(object sender, EventArgs e)
+        {
+            this.WindowState = FormWindowState.Minimized;
         }
     }
 }
