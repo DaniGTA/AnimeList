@@ -43,6 +43,13 @@
             this.remove_table = new System.Windows.Forms.Button();
             this.category = new System.Windows.Forms.Label();
             this.add_category = new System.Windows.Forms.Button();
+            this.mal_import_label = new System.Windows.Forms.Label();
+            this.mal_import_1 = new System.Windows.Forms.Button();
+            this.mal_import_2 = new System.Windows.Forms.Button();
+            this.mal_import_3 = new System.Windows.Forms.Button();
+            this.mal_import_4 = new System.Windows.Forms.Button();
+            this.mal_import_6 = new System.Windows.Forms.Button();
+            this.mal_warning = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -222,12 +229,108 @@
             this.add_category.Visible = false;
             this.add_category.Click += new System.EventHandler(this.add_category_Click_1);
             // 
+            // mal_import_label
+            // 
+            this.mal_import_label.AutoSize = true;
+            this.mal_import_label.Font = new System.Drawing.Font("39 Smooth", 9F);
+            this.mal_import_label.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.mal_import_label.Location = new System.Drawing.Point(201, 254);
+            this.mal_import_label.Name = "mal_import_label";
+            this.mal_import_label.Size = new System.Drawing.Size(71, 14);
+            this.mal_import_label.TabIndex = 16;
+            this.mal_import_label.Text = "mal_import";
+            this.mal_import_label.Visible = false;
+            // 
+            // mal_import_1
+            // 
+            this.mal_import_1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.mal_import_1.ForeColor = System.Drawing.SystemColors.ButtonFace;
+            this.mal_import_1.Location = new System.Drawing.Point(201, 293);
+            this.mal_import_1.Name = "mal_import_1";
+            this.mal_import_1.Size = new System.Drawing.Size(269, 23);
+            this.mal_import_1.TabIndex = 17;
+            this.mal_import_1.Text = "mal_import_1";
+            this.mal_import_1.UseVisualStyleBackColor = true;
+            this.mal_import_1.Visible = false;
+            this.mal_import_1.Click += new System.EventHandler(this.mal_import_1_Click);
+            // 
+            // mal_import_2
+            // 
+            this.mal_import_2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.mal_import_2.ForeColor = System.Drawing.SystemColors.ButtonFace;
+            this.mal_import_2.Location = new System.Drawing.Point(201, 322);
+            this.mal_import_2.Name = "mal_import_2";
+            this.mal_import_2.Size = new System.Drawing.Size(268, 23);
+            this.mal_import_2.TabIndex = 18;
+            this.mal_import_2.Text = "mal_import_2";
+            this.mal_import_2.UseVisualStyleBackColor = true;
+            this.mal_import_2.Visible = false;
+            this.mal_import_2.Click += new System.EventHandler(this.mal_import_2_Click);
+            // 
+            // mal_import_3
+            // 
+            this.mal_import_3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.mal_import_3.ForeColor = System.Drawing.SystemColors.ButtonFace;
+            this.mal_import_3.Location = new System.Drawing.Point(476, 293);
+            this.mal_import_3.Name = "mal_import_3";
+            this.mal_import_3.Size = new System.Drawing.Size(269, 23);
+            this.mal_import_3.TabIndex = 19;
+            this.mal_import_3.Text = "mal_import_3";
+            this.mal_import_3.UseVisualStyleBackColor = true;
+            this.mal_import_3.Visible = false;
+            this.mal_import_3.Click += new System.EventHandler(this.mal_import_3_Click);
+            // 
+            // mal_import_4
+            // 
+            this.mal_import_4.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.mal_import_4.ForeColor = System.Drawing.SystemColors.ButtonFace;
+            this.mal_import_4.Location = new System.Drawing.Point(476, 322);
+            this.mal_import_4.Name = "mal_import_4";
+            this.mal_import_4.Size = new System.Drawing.Size(269, 23);
+            this.mal_import_4.TabIndex = 20;
+            this.mal_import_4.Text = "mal_import_4";
+            this.mal_import_4.UseVisualStyleBackColor = true;
+            this.mal_import_4.Visible = false;
+            this.mal_import_4.Click += new System.EventHandler(this.mal_import_4_Click);
+            // 
+            // mal_import_6
+            // 
+            this.mal_import_6.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.mal_import_6.ForeColor = System.Drawing.SystemColors.ButtonFace;
+            this.mal_import_6.Location = new System.Drawing.Point(201, 351);
+            this.mal_import_6.Name = "mal_import_6";
+            this.mal_import_6.Size = new System.Drawing.Size(544, 23);
+            this.mal_import_6.TabIndex = 21;
+            this.mal_import_6.Text = "mal_import_6";
+            this.mal_import_6.UseVisualStyleBackColor = true;
+            this.mal_import_6.Visible = false;
+            this.mal_import_6.Click += new System.EventHandler(this.mal_import_6_Click);
+            // 
+            // mal_warning
+            // 
+            this.mal_warning.AutoSize = true;
+            this.mal_warning.Font = new System.Drawing.Font("39 Smooth", 8F);
+            this.mal_warning.ForeColor = System.Drawing.Color.Firebrick;
+            this.mal_warning.Location = new System.Drawing.Point(203, 278);
+            this.mal_warning.Name = "mal_warning";
+            this.mal_warning.Size = new System.Drawing.Size(69, 12);
+            this.mal_warning.TabIndex = 22;
+            this.mal_warning.Text = "mal_warning";
+            this.mal_warning.Visible = false;
+            // 
             // Option
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(47)))), ((int)(((byte)(50)))), ((int)(((byte)(56)))));
             this.ClientSize = new System.Drawing.Size(896, 523);
+            this.Controls.Add(this.mal_warning);
+            this.Controls.Add(this.mal_import_6);
+            this.Controls.Add(this.mal_import_4);
+            this.Controls.Add(this.mal_import_3);
+            this.Controls.Add(this.mal_import_2);
+            this.Controls.Add(this.mal_import_1);
+            this.Controls.Add(this.mal_import_label);
             this.Controls.Add(this.add_category);
             this.Controls.Add(this.category);
             this.Controls.Add(this.remove_table);
@@ -269,5 +372,12 @@
         private System.Windows.Forms.Button remove_table;
         private System.Windows.Forms.Label category;
         private System.Windows.Forms.Button add_category;
+        private System.Windows.Forms.Label mal_import_label;
+        private System.Windows.Forms.Button mal_import_1;
+        private System.Windows.Forms.Button mal_import_2;
+        private System.Windows.Forms.Button mal_import_3;
+        private System.Windows.Forms.Button mal_import_4;
+        private System.Windows.Forms.Button mal_import_6;
+        private System.Windows.Forms.Label mal_warning;
     }
 }

@@ -19,7 +19,7 @@ namespace AnimeList
     public partial class Form1 : Form
     {
         public string authInfo;
-
+        public string mal_username;
         string[] position_cache = new string[10];
         public bool RefreshAutoCompleteIsNotRunning = true;
         public bool IsTypeing = false;
@@ -64,14 +64,26 @@ namespace AnimeList
         public string rating_text;
         public string counter_text;
         public string category_text;
+        public string mal_warning;
         public string image_folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "table_images");
         public string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "table_config.cfg");
+
+        public string mal_import_1_text;
+        public string mal_import_2_text;
+        public string mal_import_3_text;
+        public string mal_import_4_text;
+        public string mal_import_6_text;
+
+        public string mal_import_text;
         public Form1()
         {
             InitializeComponent();
             close.TabStop = false;
             close.FlatStyle = FlatStyle.Flat;
             close.FlatAppearance.BorderSize = 0;
+            button1.TabStop = false;
+            button1.FlatStyle = FlatStyle.Flat;
+            button1.FlatAppearance.BorderSize = 0;
             global_background = Color.FromArgb(47, 50, 56);
             fore_background = Color.White;
             lang("ger");
@@ -113,6 +125,16 @@ namespace AnimeList
             {
 
                 case "ger":
+
+                    mal_import_1_text= "MyAnimeList \"Currently Watching\" Liste Importieren";
+                    mal_import_2_text= "MyAnimeList \"Completed\" Liste Importieren";
+                    mal_import_3_text= "MyAnimeList \"On Hold\" Liste Importieren";
+                    mal_import_4_text= "MyAnimeList \"Dropped\" Liste Importieren";
+                    mal_import_6_text= "MyAnimeList \"Plan to Watch\" Liste Importieren";
+
+                    mal_import_text = "Importieren von MyAnimeList listen:";
+
+                    mal_warning = "! Alte einträge werden überschrieben !";
                     category_text = "kategorien";
                     remove_table_text = "Tabelle entfernen";
                     color_picker = "Farbe wählen";
@@ -149,6 +171,15 @@ namespace AnimeList
                     break;
 
                 default:
+                    mal_import_1_text = "Import MyAnimeList \"Currently Watching\" list";
+                    mal_import_2_text = "Import MyAnimeList \"Completed\" list";
+                    mal_import_3_text = "Import MyAnimeList \"On Hold\" list";
+                    mal_import_4_text = "Import MyAnimeList \"Dropped\" list";
+                    mal_import_6_text = "Import MyAnimeList \"Plan to Watch\" list";
+
+                    mal_import_text = "Import lists from MyAnimeList:";
+
+                    mal_warning = "! Old entries are going to be overwritten !";
                     category_text = "Categorys";
                     remove_table_text = "remove table";
                     color_picker = "Color picker";
@@ -517,6 +548,7 @@ namespace AnimeList
             if (my_anime_list_login)
             {
                 mal_username_label.Text = mal_login_form.username + " |";
+                mal_username = mal_login_form.username;
             }
             this.Visible = true;
         }
@@ -1098,6 +1130,9 @@ namespace AnimeList
         }
         public void new_table(string name = "", int r = 0, int g = 0, int b = 0, bool rating = false, bool counter = false)
         {
+            create_table_button.Visible = false;
+            starttitle.Visible = false;
+            enable_anime_input();
             Button button = new Button();
             button.Name = list_id.ToString();
             button.Text = name;
@@ -1458,10 +1493,14 @@ namespace AnimeList
                 string text = "[TableConfig]" + Environment.NewLine;
                 text += "rating_mode:" + rating_mode.ToString() + Environment.NewLine;
                 text += "number_rating_max:" + number_input.Text + Environment.NewLine;
-                foreach (string category in Categorys)
+                try
                 {
-                    text += "category:" + category + Environment.NewLine;
+                    foreach (string category in Categorys)
+                    {
+                        text += "category:" + category + Environment.NewLine;
+                    }
                 }
+                catch (NullReferenceException) { }
                 int x = 0;
                 while (x <= list_id+1)
                 {
@@ -1490,7 +1529,11 @@ namespace AnimeList
                                         Image img = (Image)dgv.Rows[x_2].Cells[x_3].Value;
                                         try
                                         {
-                                            img.Save(Path.Combine(image_folder, dgv.Rows[x_2].Cells[1].Value.ToString() + ".png"), System.Drawing.Imaging.ImageFormat.Png);
+                                            try
+                                            {
+                                                img.Save(Path.Combine(image_folder, name_for_image(dgv.Rows[x_2].Cells[1].Value.ToString()) + ".png"), System.Drawing.Imaging.ImageFormat.Png);
+                                            }
+                                            catch (NotSupportedException) { }
                                         }
                                         catch (System.Runtime.InteropServices.ExternalException) { }
                                         catch (NullReferenceException) { }
@@ -1500,7 +1543,7 @@ namespace AnimeList
                                 Debug.WriteLine("Read from " + bt.Text + ":" + x_2 + " " + x_3);
                                 try
                                 {
-                                    row += dgv.Rows[x_2].Cells[x_3].Value + "|";
+                                    row += dgv.Rows[x_2].Cells[x_3].Value.ToString().Replace(@":","[<o>]") + "|";
                                 }
                                 catch (ArgumentOutOfRangeException) { }
 
@@ -1629,7 +1672,7 @@ namespace AnimeList
                                     Debug.WriteLine("Debug Table " + (list_id - 1) + ": " + dgv.RowCount + " " + dgv.ColumnCount);
                                     foreach (string row in singleLine_option_value.Split('|'))
                                     {
-                                        Debug.WriteLine(dgv.RowCount - 1 + " " + x + " = " + row);
+                                        Debug.WriteLine(dgv.RowCount - 1 + " " + x + " = " + row.Replace(@"[<o>]", ":"));
                                         if (x < dgv.ColumnCount)
                                         {
 
@@ -1642,13 +1685,13 @@ namespace AnimeList
                                             }
                                             else
                                             {
-                                                dgv.Rows[dgv.RowCount - 1].Cells[x].Value = row;
+                                                dgv.Rows[dgv.RowCount - 1].Cells[x].Value = row.Replace(@"[<o>]", ":");
                                             }
                                             if (x == 1)
                                             {
                                                 if (load_image)
                                                 {
-                                                    dgv.Rows[dgv.RowCount - 1].Cells[0].Value = Image.FromFile(Path.Combine(image_folder, dgv.Rows[dgv.RowCount - 1].Cells[1].Value.ToString()+".png"));
+                                                    dgv.Rows[dgv.RowCount - 1].Cells[0].Value = Image.FromFile(Path.Combine(image_folder, name_for_image(dgv.Rows[dgv.RowCount - 1].Cells[1].Value.ToString())+".png"));
                                                 }
                                             }
                                         }
@@ -1779,6 +1822,16 @@ namespace AnimeList
         private void button1_Click(object sender, EventArgs e)
         {
             this.WindowState = FormWindowState.Minimized;
+        }
+        public string name_for_image(string name)
+        {
+            string invalid = new string(Path.GetInvalidFileNameChars()) + new string(Path.GetInvalidPathChars());
+
+            foreach (char c in invalid)
+            {
+                name = name.Replace(c.ToString(), "");
+            }
+            return name;
         }
     }
 }

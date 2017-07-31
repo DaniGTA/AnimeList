@@ -573,7 +573,6 @@
             this.ClientSize = new System.Drawing.Size(896, 523);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.move_to_table_text);
-            this.Controls.Add(this.move_anime_panel);
             this.Controls.Add(this.add_category_finish);
             this.Controls.Add(this.add_category);
             this.Controls.Add(this.planning_table_true_image);
@@ -612,6 +611,7 @@
             this.Controls.Add(this.close);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.flowLayoutPanel1);
+            this.Controls.Add(this.move_anime_panel);
             this.ForeColor = System.Drawing.Color.White;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "Form1";

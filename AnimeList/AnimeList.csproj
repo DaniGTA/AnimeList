@@ -52,6 +52,7 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="mal_animelist_manager.cs" />
     <Compile Include="mal_login.cs">
       <SubType>Form</SubType>
     </Compile>

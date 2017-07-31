@@ -4,7 +4,9 @@ using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -13,18 +15,18 @@ namespace AnimeList
 {
     public partial class Option : Form
     {
-       public int list_id = 0;
-       public int current_table_config;
+        public int list_id = 0;
+        public int current_table_config;
         private int item_counter = 0;
         string[] position_cache = new string[10];
         public int del_button_number = 0;
         public int add_button_position = 100;
         public bool check_category = false;
         public Form1 form_cache;
-   
+
         public Option(Form1 form)
         {
-            list_id=form.list_id;
+            list_id = form.list_id;
             InitializeComponent();
             form_cache = form;
             load_table_options();
@@ -32,6 +34,14 @@ namespace AnimeList
             rating.Text = form.rating_text;
             episode_counter.Text = form.counter_text;
             remove_table.Text = form.remove_table_text;
+
+            mal_warning.Text = form.mal_warning;
+            mal_import_label.Text = form.mal_import_text;
+            mal_import_1.Text = form.mal_import_1_text;
+            mal_import_2.Text = form.mal_import_2_text;
+            mal_import_3.Text = form.mal_import_3_text;
+            mal_import_4.Text = form.mal_import_4_text;
+            mal_import_6.Text = form.mal_import_6_text;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -187,7 +197,7 @@ namespace AnimeList
             this.Controls.Remove((sender as Button));
         }
 
- 
+
         public void load_table_options()
         {
             int x = 0;
@@ -195,7 +205,7 @@ namespace AnimeList
             table_options_panel.Visible = true;
             while (x <= list_id)
             {
-                Debug.WriteLine(list_id + "Add_Config_Btn"+x);
+                Debug.WriteLine(list_id + "Add_Config_Btn" + x);
                 try
                 {
                     Button button = form_cache.Controls.Find(x.ToString(), true).FirstOrDefault() as Button;
@@ -214,7 +224,7 @@ namespace AnimeList
                     btn.Tag = dgv.Tag;
                     btn.Click += Btn_Click;
                     table_options_panel.Controls.Add(btn);
-                }catch (NullReferenceException) { }
+                } catch (NullReferenceException) { }
                 x++;
             }
             Button button_2 = new Button();
@@ -251,7 +261,7 @@ namespace AnimeList
                 case ("rating"):
                     rating.Checked = true;
                     break;
-                case("none"):
+                case ("none"):
                     rating.Checked = false;
                     episode_counter.Checked = false;
                     break;
@@ -283,10 +293,20 @@ namespace AnimeList
             form_cache.colorchange(current_table_config, colorDlg.Color);
             Button button_2 = this.Controls.Find("options" + current_table_config.ToString(), true).FirstOrDefault() as Button;
             button_2.BackColor = colorDlg.Color;
-            color_picker.BackColor= colorDlg.Color;
+            color_picker.BackColor = colorDlg.Color;
         }
         private void switch_table_options(bool state)
         {
+            if (form_cache.my_anime_list_login)
+            {
+                mal_warning.Visible = state;
+                mal_import_label.Visible = state;
+                mal_import_1.Visible = state;
+                mal_import_2.Visible = state;
+                mal_import_3.Visible = state;
+                mal_import_4.Visible = state;
+                mal_import_6.Visible = state;
+            }
             table_title.Visible = state;
             color_picker.Visible = state;
             rating.Visible = state;
@@ -297,7 +317,7 @@ namespace AnimeList
             if (state)
             {
 
-            }else
+            } else
             {
                 current_table_config = -1;
             }
@@ -308,7 +328,7 @@ namespace AnimeList
         {
             Button button = form_cache.Controls.Find(current_table_config.ToString(), true).FirstOrDefault() as Button;
             DataGridView dgv = form_cache.Controls.Find("table_" + current_table_config.ToString(), true).FirstOrDefault() as DataGridView;
-            Button button_2 = this.Controls.Find("options"+current_table_config.ToString(), true).FirstOrDefault() as Button;
+            Button button_2 = this.Controls.Find("options" + current_table_config.ToString(), true).FirstOrDefault() as Button;
             button.Text = table_title.Text;
             button_2.Text = table_title.Text;
         }
@@ -372,7 +392,7 @@ namespace AnimeList
                 check_category = false;
                 int x = 0;
                 List<string> category_list = new List<string>();
-                while (x != del_button_number+1)
+                while (x != del_button_number + 1)
                 {
                     try
                     {
@@ -406,6 +426,87 @@ namespace AnimeList
                 del_button_number = 0;
                 add_button_position = 100;
             }
+        }
+
+       
+        public void mal_import(int status)
+        {
+            try
+            {
+                if (form_cache.my_anime_list_login)
+                {
+                    form_cache.is_loading = true;
+                    int x = 0;
+                    string[] table = mal_animelist_manager.get_table(status, form_cache.mal_username);
+                    DataGridView dgv = form_cache.Controls.Find("table_" + current_table_config.ToString(), true).FirstOrDefault() as DataGridView;
+                    try
+                    {
+                        dgv.Rows.Clear();
+                    }
+                    catch (NullReferenceException) { }
+
+                    while (x <= table.Count())
+                    {
+                        try
+                        {
+                            string[] anime_info = table[x].Split('|');
+                            dgv.Rows.Add();
+                            Image img = mal_animelist_manager.get_image(anime_info[4]);
+                            dgv.Rows[dgv.RowCount - 1].Cells[0].Value = img;
+                            try
+                            {
+                                try
+                                {
+                                    img.Save(Path.Combine(form_cache.image_folder, form_cache.name_for_image(anime_info[2]) + ".png"), System.Drawing.Imaging.ImageFormat.Png);
+                                }
+                                catch (NotSupportedException) { }
+                            }
+                            catch (System.Runtime.InteropServices.ExternalException) { }
+                            catch (NullReferenceException) { }
+
+                            dgv.Rows[dgv.RowCount - 1].Cells[1].Value = anime_info[3];
+                            try
+                            {
+                                if (form_cache.rating_mode == 1)
+                                {
+                                    dgv.Rows[dgv.RowCount - 1].Cells[2].Value = anime_info[2];
+                                }
+                            }
+                            catch (IndexOutOfRangeException) { }
+                            catch (NullReferenceException) { }
+                            catch (ArgumentOutOfRangeException) { }
+                        }
+                        catch (IndexOutOfRangeException) { }
+                        x++;
+                    }
+                    form_cache.is_loading = false;
+                }
+            }
+            catch (NullReferenceException) { }
+            form_cache.is_loading = false;
+        }
+        private void mal_import_1_Click(object sender, EventArgs e)
+        {
+            mal_import(1);
+        }
+        private void mal_import_2_Click(object sender, EventArgs e)
+        {
+            mal_import(2);
+        }
+
+        private void mal_import_3_Click(object sender, EventArgs e)
+        {
+            mal_import(3);
+        }
+
+        private void mal_import_4_Click(object sender, EventArgs e)
+        {
+            mal_import(4);
+        }
+
+        private void mal_import_6_Click(object sender, EventArgs e)
+        {
+            mal_import(6);
         }
     }
 }
