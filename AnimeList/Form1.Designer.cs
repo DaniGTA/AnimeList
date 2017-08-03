@@ -72,6 +72,7 @@
             this.move_anime_panel = new System.Windows.Forms.FlowLayoutPanel();
             this.move_to_table_text = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
+            this.anime_title = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.anime_pic_preview)).BeginInit();
@@ -244,7 +245,7 @@
             // 
             // anime_pic_preview
             // 
-            this.anime_pic_preview.Location = new System.Drawing.Point(743, 64);
+            this.anime_pic_preview.Location = new System.Drawing.Point(736, 64);
             this.anime_pic_preview.Name = "anime_pic_preview";
             this.anime_pic_preview.Size = new System.Drawing.Size(122, 165);
             this.anime_pic_preview.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -565,12 +566,22 @@
             this.button1.UseVisualStyleBackColor = false;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
+            // anime_title
+            // 
+            this.anime_title.Font = new System.Drawing.Font("Arial", 8F);
+            this.anime_title.Location = new System.Drawing.Point(706, 38);
+            this.anime_title.Name = "anime_title";
+            this.anime_title.Size = new System.Drawing.Size(178, 23);
+            this.anime_title.TabIndex = 45;
+            this.anime_title.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(47)))), ((int)(((byte)(50)))), ((int)(((byte)(56)))));
             this.ClientSize = new System.Drawing.Size(896, 523);
+            this.Controls.Add(this.anime_title);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.move_to_table_text);
             this.Controls.Add(this.add_category_finish);
@@ -676,6 +687,7 @@
         private System.Windows.Forms.FlowLayoutPanel move_anime_panel;
         private System.Windows.Forms.Label move_to_table_text;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Label anime_title;
     }
 }
 

@@ -23,9 +23,10 @@ namespace AnimeList
         public int add_button_position = 100;
         public bool check_category = false;
         public Form1 form_cache;
-
+        public int rating_number=0;
         public Option(Form1 form)
         {
+            
             list_id = form.list_id;
             InitializeComponent();
             form_cache = form;
@@ -34,7 +35,8 @@ namespace AnimeList
             rating.Text = form.rating_text;
             episode_counter.Text = form.counter_text;
             remove_table.Text = form.remove_table_text;
-
+            rating_number_input.Text = rating_number.ToString();
+            rating_chose.SelectedIndex = form.rating_mode;
             mal_warning.Text = form.mal_warning;
             mal_import_label.Text = form.mal_import_text;
             mal_import_1.Text = form.mal_import_1_text;
@@ -42,6 +44,8 @@ namespace AnimeList
             mal_import_3.Text = form.mal_import_3_text;
             mal_import_4.Text = form.mal_import_4_text;
             mal_import_6.Text = form.mal_import_6_text;
+
+            rating_lable.Text = form.rating_setting_text;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -59,6 +63,12 @@ namespace AnimeList
         private void show_rating_option_Click(object sender, EventArgs e)
         {
             switch_table_options(false);
+            rating_chose.Visible = true;
+            if (rating_chose.SelectedIndex == 1)
+            {
+                rating_number_input.Visible = true;
+            }
+            rating_lable.Visible = true;
             add_category.Visible = true;
             category.Visible = true;
             check_category = true;
@@ -307,6 +317,8 @@ namespace AnimeList
                 mal_import_4.Visible = state;
                 mal_import_6.Visible = state;
             }
+            anisearch_id_input.Visible = state;
+            anisearch_id.Visible = state;
             table_title.Visible = state;
             color_picker.Visible = state;
             rating.Visible = state;
@@ -314,6 +326,9 @@ namespace AnimeList
             remove_table.Visible = state;
             add_category.Visible = false;
             category.Visible = false;
+            rating_number_input.Visible = false;
+            rating_chose.Visible = false;
+            rating_lable.Visible = false;
             if (state)
             {
 
@@ -485,6 +500,44 @@ namespace AnimeList
             catch (NullReferenceException) { }
             form_cache.is_loading = false;
         }
+        public void anisearch_import(int userid)
+        {
+            anisearch_manager.get_table(Int32.Parse(anisearch_id_input.Text));
+            form_cache.is_loading = true;
+            int x = 0;
+            string[] table = anisearch_manager.get_table(Int32.Parse(anisearch_id_input.Text));
+            DataGridView dgv = form_cache.Controls.Find("table_" + current_table_config.ToString(), true).FirstOrDefault() as DataGridView;
+            try
+            {
+                dgv.Rows.Clear();
+            }
+            catch (NullReferenceException) { }
+
+            while (x <= table.Count())
+            {
+                try
+                {
+                    string[] anime_info = table[x].Split('|');
+                    dgv.Rows.Add();
+                    Image img = mal_animelist_manager.get_image(anime_info[2]);
+                    dgv.Rows[dgv.RowCount - 1].Cells[0].Value = img;
+                    try
+                    {
+                        try
+                        {
+                            img.Save(Path.Combine(form_cache.image_folder, form_cache.name_for_image(anime_info[1]) + ".png"), System.Drawing.Imaging.ImageFormat.Png);
+                        }
+                        catch (NotSupportedException) { }
+                    }
+                    catch (System.Runtime.InteropServices.ExternalException) { }
+                    catch (NullReferenceException) { }
+                    dgv.Rows[dgv.RowCount - 1].Cells[1].Value = anime_info[1];
+                }
+                catch (IndexOutOfRangeException) { }
+                x++;
+            }
+            form_cache.is_loading = false;
+        }
         private void mal_import_1_Click(object sender, EventArgs e)
         {
             mal_import(1);
@@ -507,6 +560,50 @@ namespace AnimeList
         private void mal_import_6_Click(object sender, EventArgs e)
         {
             mal_import(6);
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            anisearch_import(Int32.Parse(anisearch_id_input.Text));
+
+        }
+
+        private void rating_chose_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Debug.WriteLine(rating_chose.SelectedIndex);
+            if(rating_chose.SelectedIndex == 1)
+            {
+                rating_number_input.Visible = true;
+            }
+            else
+            {
+                rating_number_input.Visible = false;
+            }
+            form_cache.rating_mode = rating_chose.SelectedIndex;
+        }
+
+        private void rating_number_input_TextChanged(object sender, EventArgs e)
+        {
+            if(rating_number_input.TextLength == 0)
+            {
+
+            }
+            else
+            {
+                try
+                {
+                    rating_number = Int32.Parse(rating_number_input.Text);
+                }
+                catch (FormatException)
+                {
+                    rating_number_input.Text = "10";
+                }
+            }
         }
     }
 }

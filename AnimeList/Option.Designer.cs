@@ -50,6 +50,11 @@
             this.mal_import_4 = new System.Windows.Forms.Button();
             this.mal_import_6 = new System.Windows.Forms.Button();
             this.mal_warning = new System.Windows.Forms.Label();
+            this.anisearch_id = new System.Windows.Forms.Button();
+            this.anisearch_id_input = new System.Windows.Forms.TextBox();
+            this.rating_chose = new System.Windows.Forms.ComboBox();
+            this.rating_lable = new System.Windows.Forms.Label();
+            this.rating_number_input = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -318,12 +323,87 @@
             this.mal_warning.Text = "mal_warning";
             this.mal_warning.Visible = false;
             // 
+            // anisearch_id
+            // 
+            this.anisearch_id.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.anisearch_id.Font = new System.Drawing.Font("39 Smooth", 9F);
+            this.anisearch_id.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.anisearch_id.Location = new System.Drawing.Point(566, 146);
+            this.anisearch_id.Name = "anisearch_id";
+            this.anisearch_id.Size = new System.Drawing.Size(146, 23);
+            this.anisearch_id.TabIndex = 23;
+            this.anisearch_id.Text = "anisearch_id";
+            this.anisearch_id.UseVisualStyleBackColor = false;
+            this.anisearch_id.Visible = false;
+            this.anisearch_id.Click += new System.EventHandler(this.button3_Click);
+            // 
+            // anisearch_id_input
+            // 
+            this.anisearch_id_input.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(47)))), ((int)(((byte)(50)))), ((int)(((byte)(56)))));
+            this.anisearch_id_input.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.anisearch_id_input.Font = new System.Drawing.Font("39 Smooth", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.anisearch_id_input.ForeColor = System.Drawing.SystemColors.Menu;
+            this.anisearch_id_input.Location = new System.Drawing.Point(199, 146);
+            this.anisearch_id_input.MaxLength = 30;
+            this.anisearch_id_input.Name = "anisearch_id_input";
+            this.anisearch_id_input.Size = new System.Drawing.Size(361, 24);
+            this.anisearch_id_input.TabIndex = 24;
+            this.anisearch_id_input.Visible = false;
+            this.anisearch_id_input.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+            // 
+            // rating_chose
+            // 
+            this.rating_chose.FormattingEnabled = true;
+            this.rating_chose.Items.AddRange(new object[] {
+            "Keine",
+            "Zahlen",
+            "5 Sterne",
+            "Daum hoch/runter"});
+            this.rating_chose.Location = new System.Drawing.Point(326, 72);
+            this.rating_chose.Name = "rating_chose";
+            this.rating_chose.Size = new System.Drawing.Size(121, 21);
+            this.rating_chose.TabIndex = 25;
+            this.rating_chose.Visible = false;
+            this.rating_chose.SelectedIndexChanged += new System.EventHandler(this.rating_chose_SelectedIndexChanged);
+            // 
+            // rating_lable
+            // 
+            this.rating_lable.AutoSize = true;
+            this.rating_lable.Font = new System.Drawing.Font("39 Smooth", 9F);
+            this.rating_lable.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.rating_lable.Location = new System.Drawing.Point(198, 79);
+            this.rating_lable.Name = "rating_lable";
+            this.rating_lable.Size = new System.Drawing.Size(41, 14);
+            this.rating_lable.TabIndex = 26;
+            this.rating_lable.Text = "rating";
+            this.rating_lable.Visible = false;
+            // 
+            // rating_number_input
+            // 
+            this.rating_number_input.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(47)))), ((int)(((byte)(50)))), ((int)(((byte)(56)))));
+            this.rating_number_input.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.rating_number_input.Font = new System.Drawing.Font("39 Smooth", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rating_number_input.ForeColor = System.Drawing.SystemColors.Menu;
+            this.rating_number_input.Location = new System.Drawing.Point(453, 69);
+            this.rating_number_input.MaxLength = 30;
+            this.rating_number_input.Name = "rating_number_input";
+            this.rating_number_input.Size = new System.Drawing.Size(74, 24);
+            this.rating_number_input.TabIndex = 27;
+            this.rating_number_input.Text = "10";
+            this.rating_number_input.Visible = false;
+            this.rating_number_input.TextChanged += new System.EventHandler(this.rating_number_input_TextChanged);
+            // 
             // Option
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(47)))), ((int)(((byte)(50)))), ((int)(((byte)(56)))));
             this.ClientSize = new System.Drawing.Size(896, 523);
+            this.Controls.Add(this.rating_number_input);
+            this.Controls.Add(this.rating_lable);
+            this.Controls.Add(this.rating_chose);
+            this.Controls.Add(this.anisearch_id_input);
+            this.Controls.Add(this.anisearch_id);
             this.Controls.Add(this.mal_warning);
             this.Controls.Add(this.mal_import_6);
             this.Controls.Add(this.mal_import_4);
@@ -379,5 +459,10 @@
         private System.Windows.Forms.Button mal_import_4;
         private System.Windows.Forms.Button mal_import_6;
         private System.Windows.Forms.Label mal_warning;
+        private System.Windows.Forms.Button anisearch_id;
+        private System.Windows.Forms.TextBox anisearch_id_input;
+        private System.Windows.Forms.ComboBox rating_chose;
+        private System.Windows.Forms.Label rating_lable;
+        private System.Windows.Forms.TextBox rating_number_input;
     }
 }

@@ -68,6 +68,8 @@ namespace AnimeList
         public string image_folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "table_images");
         public string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "table_config.cfg");
 
+        public string rating_setting_text;
+
         public string mal_import_1_text;
         public string mal_import_2_text;
         public string mal_import_3_text;
@@ -134,6 +136,7 @@ namespace AnimeList
 
                     mal_import_text = "Importieren von MyAnimeList listen:";
 
+                    rating_setting_text = "Bewertungsmethode";
                     mal_warning = "! Alte einträge werden überschrieben !";
                     category_text = "kategorien";
                     remove_table_text = "Tabelle entfernen";
@@ -179,6 +182,7 @@ namespace AnimeList
 
                     mal_import_text = "Import lists from MyAnimeList:";
 
+                    rating_setting_text = "Rating mode";
                     mal_warning = "! Old entries are going to be overwritten !";
                     category_text = "Categorys";
                     remove_table_text = "remove table";
@@ -563,9 +567,11 @@ namespace AnimeList
 
                 Option options_form = new Option(this);
                 options_form.list_id = list_id;
+                options_form.rating_number = Int32.Parse(number_input.Text);
                 options_form.StartPosition = FormStartPosition.CenterParent;
                 options_form.ShowDialog();
                 list_id = options_form.list_id;
+                number_input.Text = options_form.rating_number.ToString();
                 unload();
                 load();
 
@@ -1321,8 +1327,24 @@ namespace AnimeList
         }
         private void Table_SelectionChanged(object sender, EventArgs e)
         {
-
-           switch((sender as DataGridView).Tag.ToString())
+            try
+            {
+                anime_pic_preview.Image = (Image)(sender as DataGridView).Rows[(sender as DataGridView).SelectedRows[0].Index].Cells[0].Value;
+                anime_pic_preview.Visible = true;
+                anime_ep.Text = "";
+                anime_type.Text = "";
+                anime_description.Text = "";
+                anime_title.Text = (string)(sender as DataGridView).Rows[(sender as DataGridView).SelectedRows[0].Index].Cells[1].Value;
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                anime_pic_preview.Image = null;
+                anime_ep.Text = "";
+                anime_type.Text = "";
+                anime_description.Text = "";
+                anime_title.Text = "";
+            }
+            switch ((sender as DataGridView).Tag.ToString())
             {
                 case ("none"):
                     try
@@ -1628,7 +1650,6 @@ namespace AnimeList
                                     {
                                         case ("counter"):
                                             table_counter_cache = true;
-
                                             break;
                                         case ("counter_rating"):
                                             table_counter_cache = true;
@@ -1638,9 +1659,6 @@ namespace AnimeList
                                             table_rating_cache = true;
                                             break;
                                         case ("none"):
-                                            table_rating_cache = false;
-                                            break;
-                                        default:
                                             table_rating_cache = false;
                                             break;
                                     }
@@ -1663,16 +1681,15 @@ namespace AnimeList
                                     break;
                                 case ("[TableRows]"):
                                     new_table(table_name_cache, r_cache, g_cache, b_cache, table_rating_cache, table_counter_cache);
+                                    Debug.WriteLine("[NewTable] Name->" + table_name_cache + " rating->" + table_rating_cache);
                                     break;
                                 case ("row"):
                                     DataGridView dgv = this.Controls.Find("table_" + (list_id - 1), true).FirstOrDefault() as DataGridView;
                                     int x = 0;
                                     bool load_image = false;
                                     dgv.Rows.Add();
-                                    Debug.WriteLine("Debug Table " + (list_id - 1) + ": " + dgv.RowCount + " " + dgv.ColumnCount);
                                     foreach (string row in singleLine_option_value.Split('|'))
                                     {
-                                        Debug.WriteLine(dgv.RowCount - 1 + " " + x + " = " + row.Replace(@"[<o>]", ":"));
                                         if (x < dgv.ColumnCount)
                                         {
 

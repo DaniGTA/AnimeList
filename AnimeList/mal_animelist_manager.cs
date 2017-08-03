@@ -72,11 +72,23 @@ namespace AnimeList
         }
         public static Image get_image(string url)
         {
-            WebClient wc = new WebClient();
-            byte[] bytes = wc.DownloadData(url.Trim());
-            MemoryStream ms = new MemoryStream(bytes);
-            Image img = Image.FromStream(ms);
-            return img;
+            Debug.WriteLine("GetImage: " + url);
+            try
+            {
+                WebClient wc = new WebClient();
+                byte[] bytes = wc.DownloadData(url.Trim());
+                MemoryStream ms = new MemoryStream(bytes);
+                Image img = Image.FromStream(ms);
+                return img;
+            }
+            catch (ArgumentException)
+            {
+                return null;
+            }
+            catch (WebException)
+            {
+                return null;
+            }
         }
     }
 }
