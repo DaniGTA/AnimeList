@@ -18,6 +18,7 @@ namespace AnimeList
 {
     public partial class Form1 : Form
     {
+        public int config_number = 10;
         public string authInfo;
         public string mal_username;
         string[] position_cache = new string[10];
@@ -76,6 +77,7 @@ namespace AnimeList
         public string mal_import_4_text;
         public string mal_import_6_text;
 
+        public string anisearch_id_text;
         public string mal_import_text;
         public Form1()
         {
@@ -128,7 +130,9 @@ namespace AnimeList
 
                 case "ger":
 
-                    mal_import_1_text= "MyAnimeList \"Currently Watching\" Liste Importieren";
+                    anisearch_id_text = "<-(ID Eintragen) Anisearch Liste importieren";
+
+                    mal_import_1_text = "MyAnimeList \"Currently Watching\" Liste Importieren";
                     mal_import_2_text= "MyAnimeList \"Completed\" Liste Importieren";
                     mal_import_3_text= "MyAnimeList \"On Hold\" Liste Importieren";
                     mal_import_4_text= "MyAnimeList \"Dropped\" Liste Importieren";
@@ -181,6 +185,8 @@ namespace AnimeList
                     mal_import_6_text = "Import MyAnimeList \"Plan to Watch\" list";
 
                     mal_import_text = "Import lists from MyAnimeList:";
+
+                    anisearch_id_text = "<-(Enter AniSearch-ID) Import Anisearch list";
 
                     rating_setting_text = "Rating mode";
                     mal_warning = "! Old entries are going to be overwritten !";
@@ -1107,7 +1113,7 @@ namespace AnimeList
         {
             if (complete_list)
             {
-                new_table("Completed", 51, 130, 28, true);
+                new_table("Completed", 51, 130, 28,"TRUE|FALSE|"+rating_mode.ToString());
             }
             if (currently_watching_list)
             {
@@ -1119,7 +1125,7 @@ namespace AnimeList
             }
             if (plan_to_watch_list)
             {
-                new_table("Plan to watch", 20, 34, 73);
+                new_table("Plan to watch", 20, 34, 73,"FALSE|TRUE|0");
             }
 
             starttitle.Visible = false;
@@ -1134,8 +1140,24 @@ namespace AnimeList
         {
 
         }
-        public void new_table(string name = "", int r = 0, int g = 0, int b = 0, bool rating = false, bool counter = false)
+        public void new_table(string name = "", int r = 0, int g = 0, int b = 0, string config="")
         {
+
+            //[0] Rating
+            //[1] Counting
+            //[2] Rating methode
+            //[3] Style
+            string[] configs = config.Split('|');
+
+            if(config == "")
+            {
+                int x = 0;
+                while(x < config_number)
+                {
+                    config = config + "|";
+                    x++;
+                }
+            }
             create_table_button.Visible = false;
             starttitle.Visible = false;
             enable_anime_input();
@@ -1153,21 +1175,36 @@ namespace AnimeList
             button.AutoSize = true;
             button.Click += new EventHandler(change_table);
 
-
-            flowLayoutPanel1.Controls.Add(button);
             DataGridView table = new DataGridView();
             table.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(r, g, b);
-
-            DataGridViewImageColumn iconColumn = new DataGridViewImageColumn();
-            iconColumn.Name = image_text;
-            iconColumn.HeaderText = image_text;
-            iconColumn.FillWeight = 10;
-            iconColumn.Resizable = DataGridViewTriState.False;
-            iconColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            iconColumn.MinimumWidth = 10;
-            iconColumn.DefaultCellStyle.NullValue = null;
-            iconColumn.ImageLayout = DataGridViewImageCellLayout.Zoom;
-            table.Columns.Insert(0, iconColumn);
+            flowLayoutPanel1.Controls.Add(button);
+                DataGridViewImageColumn iconColumn = new DataGridViewImageColumn();
+                iconColumn.Name = image_text;
+                iconColumn.HeaderText = image_text;
+                iconColumn.FillWeight = 10;
+                iconColumn.Resizable = DataGridViewTriState.False;
+                iconColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                iconColumn.MinimumWidth = 10;
+                iconColumn.DefaultCellStyle.NullValue = null;
+                iconColumn.ImageLayout = DataGridViewImageCellLayout.Zoom;
+            try
+            {
+                if (Int32.Parse(configs[3]) == 0)
+                {
+                    iconColumn.Visible = true;
+                }
+                else
+                {
+                    iconColumn.Visible = false;
+                    table.MouseMove += Table_MouseHover;
+                }
+            }
+            catch (IndexOutOfRangeException)
+            {
+                iconColumn.Visible = true;
+            }
+            catch (FormatException) { }
+                    table.Columns.Insert(0, iconColumn);
             table.AllowUserToAddRows = false;
             table.Columns.Add(name_text, name_text);
             table.BorderStyle = BorderStyle.FixedSingle;
@@ -1179,22 +1216,7 @@ namespace AnimeList
             table.EnableHeadersVisualStyles = false;
             table.BackgroundColor = global_background;
             table.Name = "table_" + list_id;
-            if (rating)
-            {
-                table.Tag = "rating";
-            }
-            else
-            {
-                table.Tag = "none";
-            }
-            if (counter)
-            {
-                table.Tag = "counter";
-            }
-            if (rating && counter)
-            {
-                table.Tag = "counter_rating";
-            }
+            table.Tag = config;
             table.Height = 350;
             table.Width = 688;
             table.DefaultCellStyle.SelectionBackColor = Color.Black;
@@ -1211,6 +1233,37 @@ namespace AnimeList
             table.CellValueChanged += Table_CellValueChanged1;
             table.SelectionChanged += Table_SelectionChanged;
             table.MouseClick += Table_MouseClick;
+
+            DataGridViewTextBoxColumn episoden = new DataGridViewTextBoxColumn();
+            episoden.Name = folgen;
+            episoden.HeaderText = folgen;
+            episoden.FillWeight = 10;
+            episoden.Resizable = DataGridViewTriState.False;
+            episoden.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            episoden.MinimumWidth = 10;
+            episoden.DefaultCellStyle.NullValue = null;
+            try
+            {
+                if (Boolean.Parse(configs[4]))
+                {
+                    episoden.Visible = true;
+                }
+                else
+                {
+                    episoden.Visible = false;
+                }
+            }
+            
+            catch (IndexOutOfRangeException)
+            {
+                episoden.Visible = false;
+            }
+            catch (FormatException)
+            {
+                episoden.Visible = false;
+            }
+            table.Columns.Insert(2, episoden);
+
             this.Controls.Add(table);
             try
             {
@@ -1224,82 +1277,141 @@ namespace AnimeList
                 list.Add(Color.FromArgb(r, g, b).ToArgb());
                 list_color = list.ToArray();
             }
-            if (rating)
+            try
             {
-                int x = 2;
-                try
+                if (Convert.ToBoolean(configs[0]))
                 {
-                    foreach (string category in Categorys)
+                    int x = 2;
+                    try
                     {
-                        try
+                        foreach (string category in Categorys)
                         {
-                            if (category.Length != 0)
+                            try
                             {
-
-                                if (rating_mode == 1)
+                                if (category.Length != 0)
                                 {
-                                    Debug.WriteLine("add textrow " + category);
-                                    table.Columns.Add(category, category);
-                                }
-                                if (rating_mode == 2)
-                                {
-                                    DataGridViewComboBoxColumn combobox = new DataGridViewComboBoxColumn();
-                                    combobox.Name = category;
-                                    combobox.HeaderText = category;
-                                    combobox.Resizable = DataGridViewTriState.False;
-                                    combobox.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-                                    combobox.FlatStyle = FlatStyle.Flat;
-                                    combobox.Width = 10;
-                                    combobox.DefaultCellStyle.NullValue = null;
-                                    combobox.Items.Add("★");
-                                    combobox.Items.Add("★★");
-                                    combobox.Items.Add("★★★");
-                                    combobox.Items.Add("★★★★");
-                                    combobox.Items.Add("★★★★★");
-                                    table.Columns.Insert(2, combobox);
-                                    Debug.WriteLine("add comborow " + category);
-                                }
-                                if (rating_mode == 3)
-                                {
-                                    DataGridViewComboBoxColumn combobox = new DataGridViewComboBoxColumn();
-                                    combobox.Name = category;
-                                    combobox.HeaderText = category;
-                                    combobox.Resizable = DataGridViewTriState.False;
-                                    combobox.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-                                    combobox.FlatStyle = FlatStyle.Flat;
-                                    combobox.DefaultCellStyle.NullValue = null;
-                                    combobox.Items.Add("👍");
-                                    combobox.Items.Add("👎");
-                                    table.Columns.Insert(2, combobox);
-                                    Debug.WriteLine("add comborow " + category);
-                                }
+
+                                    if (Int32.Parse(configs[2]) == 1)
+                                    {
+                                        Debug.WriteLine("add textrow " + category);
+                                        table.Columns.Add(category, category);
+                                    }
+                                    if (Int32.Parse(configs[2]) == 2)
+                                    {
+                                        DataGridViewComboBoxColumn combobox = new DataGridViewComboBoxColumn();
+                                        combobox.Name = category;
+                                        combobox.HeaderText = category;
+                                        combobox.Resizable = DataGridViewTriState.False;
+                                        combobox.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                                        combobox.FlatStyle = FlatStyle.Flat;
+                                        combobox.Width = 10;
+                                        combobox.DefaultCellStyle.NullValue = null;
+                                        combobox.Items.Add("★");
+                                        combobox.Items.Add("★★");
+                                        combobox.Items.Add("★★★");
+                                        combobox.Items.Add("★★★★");
+                                        combobox.Items.Add("★★★★★");
+                                        table.Columns.Insert(2, combobox);
+                                        Debug.WriteLine("add comborow " + category);
+                                    }
+                                    if (Int32.Parse(configs[2]) == 3)
+                                    {
+                                        DataGridViewComboBoxColumn combobox = new DataGridViewComboBoxColumn();
+                                        combobox.Name = category;
+                                        combobox.HeaderText = category;
+                                        combobox.Resizable = DataGridViewTriState.False;
+                                        combobox.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                                        combobox.FlatStyle = FlatStyle.Flat;
+                                        combobox.DefaultCellStyle.NullValue = null;
+                                        combobox.Items.Add("👍");
+                                        combobox.Items.Add("👎");
+                                        table.Columns.Insert(2, combobox);
+                                        Debug.WriteLine("add comborow " + category);
+                                    }
 
 
-                                x++;
+                                    x++;
+                                }
                             }
+                            catch (NullReferenceException) { }
                         }
-                        catch (NullReferenceException) { }
                     }
+                    catch (NullReferenceException) { }
                 }
-                catch (NullReferenceException) { }
             }
+            catch (FormatException) { }
             list_id++;
+        }
+
+        private void Table_MouseHover(object sender, EventArgs e)
+        {
+            try
+            {
+                image.Parent = (sender as DataGridView);
+                this.Refresh();
+                if ((sender as DataGridView).Visible)
+                {
+                    Debug.WriteLine("[MousePos]x:" + Cursor.Position.X + "Y:" + Cursor.Position.Y);
+                    Debug.WriteLine((sender as DataGridView).Rows[(sender as DataGridView).HitTest((sender as DataGridView).PointToClient(Cursor.Position).X, (sender as DataGridView).PointToClient(Cursor.Position).Y).RowIndex].Index);
+                    anime_info_hover.show_only_image(image, (Image)(sender as DataGridView).Rows[(sender as DataGridView).HitTest((sender as DataGridView).PointToClient(Cursor.Position).X, (sender as DataGridView).PointToClient(Cursor.Position).Y).RowIndex].Cells[0].Value, new Point(this.PointToClient(Cursor.Position).X + 10, this.PointToClient(Cursor.Position).Y - 70));
+                    this.Refresh();
+                }else
+                {
+                    image.Visible = false;
+                    image.Image = null;
+                }
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                image.Visible = false;
+                image.Image = null;
+            }
         }
 
         private void Table_MouseClick(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Right)
+            try
             {
-                ContextMenu m = new ContextMenu();
-
-                int currentMouseOverRow = (sender as DataGridView).HitTest(e.X, e.Y).RowIndex;
-                (sender as DataGridView).CurrentCell = (sender as DataGridView).Rows[(sender as DataGridView).HitTest(e.X, e.Y).RowIndex].Cells[(sender as DataGridView).HitTest(e.X, e.Y).ColumnIndex];
-                if (currentMouseOverRow >= 0)
+                if (e.Button == MouseButtons.Right)
                 {
-                    m.MenuItems.Add(new MenuItem("Delete", del_row));
-                }
+                    ContextMenu m = new ContextMenu();
 
-                m.Show((sender as DataGridView), new Point(e.X, e.Y));
+                    int currentMouseOverRow = (sender as DataGridView).HitTest(e.X, e.Y).RowIndex;
+                    (sender as DataGridView).Rows[currentMouseOverRow].Selected = true;
+                    (sender as DataGridView).CurrentCell = (sender as DataGridView).Rows[(sender as DataGridView).HitTest(e.X, e.Y).RowIndex].Cells[(sender as DataGridView).HitTest(e.X, e.Y).ColumnIndex];
+                    if (currentMouseOverRow >= 0)
+                    {
+                        m.MenuItems.Add(new MenuItem("Delete", del_row));
+                        m.MenuItems.Add(new MenuItem("Remove Image", remove_image));
+                    }
+
+                    m.Show((sender as DataGridView), new Point(e.X, e.Y));
+                }
+            }
+            catch (IndexOutOfRangeException) { }
+            catch (ArgumentOutOfRangeException) { }
+        }
+        public void remove_image(Object sender, System.EventArgs e)
+        {
+            int x = 0;
+            while (x <= list_id)
+            {
+                try
+                {
+                    DataGridView dgv = this.Controls.Find("table_" + x.ToString(), true).FirstOrDefault() as DataGridView;
+                    if (dgv.Visible)
+                    {
+                        try
+                        {
+                            dgv.Rows[dgv.SelectedRows[0].Index].Cells[0].Value = null;
+                        }
+                        catch (ArgumentOutOfRangeException) { }
+                        x = list_id;
+                    }
+
+                }
+                catch (NullReferenceException) { }
+                x++;
             }
         }
         private void del_row(Object sender, System.EventArgs e)
@@ -1309,7 +1421,6 @@ namespace AnimeList
             {
                 try
                 {
-                    Button bt = this.Controls.Find(x.ToString(), true).FirstOrDefault() as Button;
                     DataGridView dgv = this.Controls.Find("table_" + x.ToString(), true).FirstOrDefault() as DataGridView;
                     if (dgv.Visible)
                     {
@@ -1506,6 +1617,12 @@ namespace AnimeList
         }
         public void save()
         {
+            saving_thread();
+            //Thread saving = new Thread(() => saving_thread());
+            //saving.Start();
+        }
+        public void saving_thread()
+        {
             if (!is_loading)
             {
                 Debug.WriteLine(path);
@@ -1524,7 +1641,7 @@ namespace AnimeList
                 }
                 catch (NullReferenceException) { }
                 int x = 0;
-                while (x <= list_id+1)
+                while (x <= list_id + 1)
                 {
                     Button bt = this.Controls.Find(x.ToString(), true).FirstOrDefault() as Button;
                     DataGridView dgv = this.Controls.Find("table_" + x.ToString(), true).FirstOrDefault() as DataGridView;
@@ -1538,13 +1655,14 @@ namespace AnimeList
                         int x_2 = 0;
                         text += "[TableRows]:" + Environment.NewLine;
                         Debug.WriteLine("Readlines from " + bt.Text);
-                        while (x_2 <= dgv.RowCount+1)
+                        while (x_2 <= dgv.RowCount + 1)
                         {
                             int x_3 = 0;
                             string row = "";
-                            while (x_3<= dgv.ColumnCount+1)
+                            while (x_3 <= dgv.ColumnCount + 1)
                             {
-                                if (x_3 == 0) {
+                                if (x_3 == 0)
+                                {
                                     Directory.CreateDirectory(image_folder);
                                     try
                                     {
@@ -1556,6 +1674,7 @@ namespace AnimeList
                                                 img.Save(Path.Combine(image_folder, name_for_image(dgv.Rows[x_2].Cells[1].Value.ToString()) + ".png"), System.Drawing.Imaging.ImageFormat.Png);
                                             }
                                             catch (NotSupportedException) { }
+                                            catch (InvalidOperationException) { }
                                         }
                                         catch (System.Runtime.InteropServices.ExternalException) { }
                                         catch (NullReferenceException) { }
@@ -1565,7 +1684,7 @@ namespace AnimeList
                                 Debug.WriteLine("Read from " + bt.Text + ":" + x_2 + " " + x_3);
                                 try
                                 {
-                                    row += dgv.Rows[x_2].Cells[x_3].Value.ToString().Replace(@":","[<o>]") + "|";
+                                    row += dgv.Rows[x_2].Cells[x_3].Value.ToString().Replace(@":", "[<o>]") + "|";
                                 }
                                 catch (ArgumentOutOfRangeException) { }
 
@@ -1581,7 +1700,6 @@ namespace AnimeList
                     catch (NullReferenceException) { }
                     x++;
                 }
-
                 File.WriteAllText(path, text.ToString());
             }
         }
@@ -1592,8 +1710,7 @@ namespace AnimeList
                 var allLines = System.IO.File.ReadAllLines(path);
                 bool isTableConfig = false;
                 string table_name_cache = "";
-                bool table_rating_cache = false;
-                bool table_counter_cache = false;
+                string table_tag_cache = "";
                 int r_cache = 0;
                 int g_cache = 0;
                 int b_cache = 0;
@@ -1644,24 +1761,7 @@ namespace AnimeList
                                     table_name_cache = singleLine_option_value;
                                     break;
                                 case ("RatingTable"):
-                                    table_rating_cache = false;
-                                    table_counter_cache = false;
-                                    switch (singleLine_option_value)
-                                    {
-                                        case ("counter"):
-                                            table_counter_cache = true;
-                                            break;
-                                        case ("counter_rating"):
-                                            table_counter_cache = true;
-                                            table_rating_cache = true;
-                                            break;
-                                        case ("rating"):
-                                            table_rating_cache = true;
-                                            break;
-                                        case ("none"):
-                                            table_rating_cache = false;
-                                            break;
-                                    }
+                                    table_tag_cache = singleLine_option_value;
                                     break;
                                 case ("r"):
                                     try
@@ -1670,7 +1770,6 @@ namespace AnimeList
                                     }
                                     catch (FormatException)
                                     {
-
                                     }
                                     break;
                                 case ("g"):
@@ -1680,8 +1779,8 @@ namespace AnimeList
                                     b_cache = Int32.Parse(singleLine_option_value);
                                     break;
                                 case ("[TableRows]"):
-                                    new_table(table_name_cache, r_cache, g_cache, b_cache, table_rating_cache, table_counter_cache);
-                                    Debug.WriteLine("[NewTable] Name->" + table_name_cache + " rating->" + table_rating_cache);
+                                    new_table(table_name_cache, r_cache, g_cache, b_cache, table_tag_cache);
+                                    Debug.WriteLine("[NewTable] Name->" + table_name_cache);
                                     break;
                                 case ("row"):
                                     DataGridView dgv = this.Controls.Find("table_" + (list_id - 1), true).FirstOrDefault() as DataGridView;
@@ -1708,7 +1807,7 @@ namespace AnimeList
                                             {
                                                 if (load_image)
                                                 {
-                                                    dgv.Rows[dgv.RowCount - 1].Cells[0].Value = Image.FromFile(Path.Combine(image_folder, name_for_image(dgv.Rows[dgv.RowCount - 1].Cells[1].Value.ToString())+".png"));
+                                                    dgv.Rows[dgv.RowCount - 1].Cells[0].Value = Image.FromFile(Path.Combine(image_folder, name_for_image(dgv.Rows[dgv.RowCount - 1].Cells[1].Value.ToString()) + ".png"));
                                                 }
                                             }
                                         }
@@ -1785,7 +1884,6 @@ namespace AnimeList
                                     return "found";
                                 }
                                 }
-
                             }
                         response.Close();
                         readStream.Close();
@@ -1849,6 +1947,11 @@ namespace AnimeList
                 name = name.Replace(c.ToString(), "");
             }
             return name;
+        }
+
+        private void starttitle_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

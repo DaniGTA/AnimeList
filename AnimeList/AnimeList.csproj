@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="anime_info_hover.cs" />
     <Compile Include="anisearch_manager.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>

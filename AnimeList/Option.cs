@@ -26,7 +26,7 @@ namespace AnimeList
         public int rating_number=0;
         public Option(Form1 form)
         {
-            
+
             list_id = form.list_id;
             InitializeComponent();
             form_cache = form;
@@ -44,8 +44,11 @@ namespace AnimeList
             mal_import_3.Text = form.mal_import_3_text;
             mal_import_4.Text = form.mal_import_4_text;
             mal_import_6.Text = form.mal_import_6_text;
+            anisearch_id.Text = form.anisearch_id_text;
 
             rating_lable.Text = form.rating_setting_text;
+
+            switch_table_options(false);
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -256,35 +259,35 @@ namespace AnimeList
             current_table_config = Int32.Parse((sender as Button).Name.ToString().Replace("options", ""));
             switch_table_options(true);
             table_title.Text = (sender as Button).Text;
-            rating.Checked = false;
-            episode_counter.Checked = false;
             color_picker.BackColor = (sender as Button).BackColor;
-            switch ((sender as Button).Tag.ToString())
+           
+            string[] config = (sender as Button).Tag.ToString().Split('|');
+            try
             {
-                case ("counter_rating"):
-                    episode_counter.Checked = true;
-                    rating.Checked = true;
-                    break;
-                case ("counter"):
-                    episode_counter.Checked = true;
-                    break;
-                case ("rating"):
-                    rating.Checked = true;
-                    break;
-                case ("none"):
-                    rating.Checked = false;
-                    episode_counter.Checked = false;
-                    break;
-                default:
-                    rating.Checked = false;
-                    episode_counter.Checked = false;
-
-                    break;
+                rating.Checked = Boolean.Parse(config[0]);
+                
+            }catch (NullReferenceException){}catch (FormatException){}catch (IndexOutOfRangeException) { }
+            try{
+                episode_counter.Checked = Boolean.Parse(config[1]);
             }
-
-
+            catch (NullReferenceException) { }
+            catch (FormatException) { }
+            catch (IndexOutOfRangeException) { }
+            try { 
+            design_bpx.SelectedIndex = Int32.Parse(config[3]);
+            }
+            catch (NullReferenceException) { }
+            catch (FormatException) { }
+            catch (IndexOutOfRangeException) { }
+            try
+            {
+                rating_chose.SelectedIndex = Int32.Parse(config[2]);
+            }catch (NullReferenceException){}catch (FormatException){}catch (IndexOutOfRangeException) { }
+            try
+            {
+                show_episodes.Checked = Boolean.Parse(config[4]);
+            }catch (NullReferenceException){}catch (FormatException){}catch (IndexOutOfRangeException) { }
         }
-
         private void Button_2_Click(object sender, EventArgs e)
         {
             form_cache.new_table((sender as Button).Text);
@@ -317,6 +320,9 @@ namespace AnimeList
                 mal_import_4.Visible = state;
                 mal_import_6.Visible = state;
             }
+            show_episodes.Visible = state;
+            design_bpx.Visible = state;
+            design_text.Visible = state;
             anisearch_id_input.Visible = state;
             anisearch_id.Visible = state;
             table_title.Visible = state;
@@ -351,8 +357,6 @@ namespace AnimeList
         private void episode_counter_CheckedChanged(object sender, EventArgs e)
         {
             refresh_checkbox_options();
-
-
         }
         private void rating_CheckedChanged(object sender, EventArgs e)
         {
@@ -362,22 +366,63 @@ namespace AnimeList
         {
             DataGridView dgv = form_cache.Controls.Find("table_" + current_table_config.ToString(), true).FirstOrDefault() as DataGridView;
             Button button = this.Controls.Find("options" + current_table_config.ToString(), true).FirstOrDefault() as Button;
-            dgv.Tag = "none";
+            string[] config = dgv.Tag.ToString().Split('|');
             if (rating.Checked)
             {
-                dgv.Tag = "rating";
-                button.Tag = "rating";
+                try { 
+                config[0] = "TRUE";
+                }
+                catch (IndexOutOfRangeException) { }
+            }
+            else
+            {
+                try { 
+                config[0] = "FALSE";
+                }
+                catch (IndexOutOfRangeException) { }
             }
             if (episode_counter.Checked)
             {
-                dgv.Tag = "counter";
-                button.Tag = "counter";
+                try {
+                config[1] = "TRUE";
+            }catch (IndexOutOfRangeException) { }
+        }else{
+                try
+                {
+                    config[1] = "FALSE";
+                }
+                catch (IndexOutOfRangeException) { }
             }
-            if (episode_counter.Checked && rating.Checked)
+            if (show_episodes.Checked)
             {
-                dgv.Tag = "counter_rating";
-                button.Tag = "counter_rating";
+                try
+                {
+                    config[4] = "TRUE";
+                }
+                catch (IndexOutOfRangeException) { }
+        }else
+            {
+                try
+                {
+                    config[4] = "FALSE";
+                }
+                catch (IndexOutOfRangeException) { }
+        }
+            string config_set = "";
+            foreach (string config_s in config)
+            {
+                if (config_set == "")
+                {
+                    config_set = config_s;
+                }
+                else
+                {
+                    config_set = config_set + "|" + config_s;
+                }
             }
+            dgv.Tag = config_set;
+            button.Tag = config_set;
+            Debug.WriteLine(dgv.Tag);
         }
 
         private void remove_table_Click(object sender, EventArgs e)
@@ -443,7 +488,7 @@ namespace AnimeList
             }
         }
 
-       
+
         public void mal_import(int status)
         {
             try
@@ -480,11 +525,12 @@ namespace AnimeList
                             catch (NullReferenceException) { }
 
                             dgv.Rows[dgv.RowCount - 1].Cells[1].Value = anime_info[3];
+                            dgv.Rows[dgv.RowCount - 1].Cells[2].Value = anime_info[1];
                             try
                             {
                                 if (form_cache.rating_mode == 1)
                                 {
-                                    dgv.Rows[dgv.RowCount - 1].Cells[2].Value = anime_info[2];
+                                    dgv.Rows[dgv.RowCount - 1].Cells[3].Value = anime_info[2];
                                 }
                             }
                             catch (IndexOutOfRangeException) { }
@@ -533,7 +579,9 @@ namespace AnimeList
                     catch (NullReferenceException) { }
                     dgv.Rows[dgv.RowCount - 1].Cells[1].Value = anime_info[1];
                 }
-                catch (IndexOutOfRangeException) { }
+                catch (IndexOutOfRangeException) {
+
+                }
                 x++;
             }
             form_cache.is_loading = false;
@@ -604,6 +652,46 @@ namespace AnimeList
                     rating_number_input.Text = "10";
                 }
             }
+        }
+
+        private void design_bpx_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            DataGridView dgv = form_cache.Controls.Find("table_" + current_table_config.ToString(), true).FirstOrDefault() as DataGridView;
+            Button button = this.Controls.Find("options" + current_table_config.ToString(), true).FirstOrDefault() as Button;
+            string[] config = dgv.Tag.ToString().Split('|');
+            try
+            {
+                config[3] = design_bpx.SelectedIndex.ToString();
+            }
+            catch (IndexOutOfRangeException)
+            {
+                int x = 0;
+                string config_s = "";
+                while (x < form_cache.config_number)
+                {
+                    config_s = config_s + "|";
+                    x++;
+                }
+            }
+            string config_set = "";
+            foreach (string config_s in config)
+            {
+                if (config_set == "")
+                {
+                    config_set = config_s;
+                }
+                else
+                {
+                    config_set = config_set + "|" + config_s;
+                }
+            }
+            dgv.Tag = config_set;
+            button.Tag = config_set;
+        }
+
+        private void show_episodes_CheckedChanged(object sender, EventArgs e)
+        {
+            refresh_checkbox_options();
         }
     }
 }

@@ -55,6 +55,9 @@
             this.rating_chose = new System.Windows.Forms.ComboBox();
             this.rating_lable = new System.Windows.Forms.Label();
             this.rating_number_input = new System.Windows.Forms.TextBox();
+            this.design_bpx = new System.Windows.Forms.ComboBox();
+            this.design_text = new System.Windows.Forms.Label();
+            this.show_episodes = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -339,7 +342,7 @@
             // 
             // anisearch_id_input
             // 
-            this.anisearch_id_input.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(47)))), ((int)(((byte)(50)))), ((int)(((byte)(56)))));
+            this.anisearch_id_input.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.anisearch_id_input.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.anisearch_id_input.Font = new System.Drawing.Font("39 Smooth", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.anisearch_id_input.ForeColor = System.Drawing.SystemColors.Menu;
@@ -393,12 +396,54 @@
             this.rating_number_input.Visible = false;
             this.rating_number_input.TextChanged += new System.EventHandler(this.rating_number_input_TextChanged);
             // 
+            // design_bpx
+            // 
+            this.design_bpx.FormattingEnabled = true;
+            this.design_bpx.Items.AddRange(new object[] {
+            "0",
+            "1"});
+            this.design_bpx.Location = new System.Drawing.Point(577, 467);
+            this.design_bpx.Name = "design_bpx";
+            this.design_bpx.Size = new System.Drawing.Size(121, 21);
+            this.design_bpx.TabIndex = 28;
+            this.design_bpx.Visible = false;
+            this.design_bpx.SelectedIndexChanged += new System.EventHandler(this.design_bpx_SelectedIndexChanged);
+            // 
+            // design_text
+            // 
+            this.design_text.AutoSize = true;
+            this.design_text.Font = new System.Drawing.Font("39 Smooth", 9F);
+            this.design_text.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.design_text.Location = new System.Drawing.Point(525, 471);
+            this.design_text.Name = "design_text";
+            this.design_text.Size = new System.Drawing.Size(46, 14);
+            this.design_text.TabIndex = 29;
+            this.design_text.Text = "Design";
+            this.design_text.Visible = false;
+            // 
+            // show_episodes
+            // 
+            this.show_episodes.AutoSize = true;
+            this.show_episodes.Font = new System.Drawing.Font("39 Smooth", 9F);
+            this.show_episodes.ForeColor = System.Drawing.Color.AliceBlue;
+            this.show_episodes.Location = new System.Drawing.Point(528, 494);
+            this.show_episodes.Name = "show_episodes";
+            this.show_episodes.Size = new System.Drawing.Size(119, 18);
+            this.show_episodes.TabIndex = 30;
+            this.show_episodes.Text = "Folgen anzeigen";
+            this.show_episodes.UseVisualStyleBackColor = true;
+            this.show_episodes.Visible = false;
+            this.show_episodes.CheckedChanged += new System.EventHandler(this.show_episodes_CheckedChanged);
+            // 
             // Option
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(47)))), ((int)(((byte)(50)))), ((int)(((byte)(56)))));
             this.ClientSize = new System.Drawing.Size(896, 523);
+            this.Controls.Add(this.show_episodes);
+            this.Controls.Add(this.design_text);
+            this.Controls.Add(this.design_bpx);
             this.Controls.Add(this.rating_number_input);
             this.Controls.Add(this.rating_lable);
             this.Controls.Add(this.rating_chose);
@@ -464,5 +509,8 @@
         private System.Windows.Forms.ComboBox rating_chose;
         private System.Windows.Forms.Label rating_lable;
         private System.Windows.Forms.TextBox rating_number_input;
+        private System.Windows.Forms.ComboBox design_bpx;
+        private System.Windows.Forms.Label design_text;
+        private System.Windows.Forms.CheckBox show_episodes;
     }
 }

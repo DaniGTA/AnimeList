@@ -73,6 +73,7 @@
             this.move_to_table_text = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
             this.anime_title = new System.Windows.Forms.Label();
+            this.image = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.anime_pic_preview)).BeginInit();
@@ -84,6 +85,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.Watched_list_true_image)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cancel__table_true_image)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.planning_table_true_image)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.image)).BeginInit();
             this.SuspendLayout();
             // 
             // close
@@ -132,6 +134,7 @@
             this.starttitle.TabIndex = 2;
             this.starttitle.Text = "StartTitle";
             this.starttitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.starttitle.Click += new System.EventHandler(this.starttitle_Click);
             // 
             // create_table_button
             // 
@@ -575,12 +578,23 @@
             this.anime_title.TabIndex = 45;
             this.anime_title.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // image
+            // 
+            this.image.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.image.Location = new System.Drawing.Point(862, 517);
+            this.image.Name = "image";
+            this.image.Size = new System.Drawing.Size(31, 15);
+            this.image.TabIndex = 46;
+            this.image.TabStop = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(47)))), ((int)(((byte)(50)))), ((int)(((byte)(56)))));
             this.ClientSize = new System.Drawing.Size(896, 523);
+            this.Controls.Add(this.image);
+            this.Controls.Add(this.starttitle);
             this.Controls.Add(this.anime_title);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.move_to_table_text);
@@ -617,7 +631,6 @@
             this.Controls.Add(this.button_false);
             this.Controls.Add(this.button_true);
             this.Controls.Add(this.create_table_button);
-            this.Controls.Add(this.starttitle);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.close);
             this.Controls.Add(this.pictureBox1);
@@ -638,6 +651,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.Watched_list_true_image)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cancel__table_true_image)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.planning_table_true_image)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.image)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -688,6 +702,7 @@
         private System.Windows.Forms.Label move_to_table_text;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Label anime_title;
+        private System.Windows.Forms.PictureBox image;
     }
 }
 
