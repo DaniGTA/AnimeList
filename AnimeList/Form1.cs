@@ -577,6 +577,7 @@ namespace AnimeList
                 options_form.StartPosition = FormStartPosition.CenterParent;
                 options_form.ShowDialog();
                 list_id = options_form.list_id;
+            Debug.WriteLine("ListID is: "+ list_id);
                 number_input.Text = options_form.rating_number.ToString();
                 unload();
                 load();
@@ -1156,7 +1157,15 @@ namespace AnimeList
                 {
                     config = config + "|";
                     x++;
-                }
+                } 
+            }
+            try
+            {
+                if (Int32.Parse(configs[2]) == 0){ }
+            }
+            catch (FormatException)
+            {
+                configs[2] = "1";
             }
             create_table_button.Visible = false;
             starttitle.Visible = false;
@@ -1262,7 +1271,7 @@ namespace AnimeList
             {
                 episoden.Visible = false;
             }
-            table.Columns.Insert(2, episoden);
+            table.Columns.Insert((table.ColumnCount), episoden);
 
             this.Controls.Add(table);
             try
@@ -1279,6 +1288,7 @@ namespace AnimeList
             }
             try
             {
+                Debug.WriteLine(configs[0]);
                 if (Convert.ToBoolean(configs[0]))
                 {
                     int x = 2;
@@ -1294,7 +1304,7 @@ namespace AnimeList
                                     if (Int32.Parse(configs[2]) == 1)
                                     {
                                         Debug.WriteLine("add textrow " + category);
-                                        table.Columns.Add(category, category);
+                                        table.Columns.Add((table.ColumnCount).ToString(), category);
                                     }
                                     if (Int32.Parse(configs[2]) == 2)
                                     {
@@ -1311,7 +1321,7 @@ namespace AnimeList
                                         combobox.Items.Add("★★★");
                                         combobox.Items.Add("★★★★");
                                         combobox.Items.Add("★★★★★");
-                                        table.Columns.Insert(2, combobox);
+                                        table.Columns.Insert((table.ColumnCount), combobox);
                                         Debug.WriteLine("add comborow " + category);
                                     }
                                     if (Int32.Parse(configs[2]) == 3)
@@ -1325,7 +1335,7 @@ namespace AnimeList
                                         combobox.DefaultCellStyle.NullValue = null;
                                         combobox.Items.Add("👍");
                                         combobox.Items.Add("👎");
-                                        table.Columns.Insert(2, combobox);
+                                        table.Columns.Insert((table.ColumnCount), combobox);
                                         Debug.WriteLine("add comborow " + category);
                                     }
 

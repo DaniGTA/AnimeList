@@ -333,7 +333,7 @@
             this.anisearch_id.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
             this.anisearch_id.Location = new System.Drawing.Point(566, 146);
             this.anisearch_id.Name = "anisearch_id";
-            this.anisearch_id.Size = new System.Drawing.Size(146, 23);
+            this.anisearch_id.Size = new System.Drawing.Size(318, 23);
             this.anisearch_id.TabIndex = 23;
             this.anisearch_id.Text = "anisearch_id";
             this.anisearch_id.UseVisualStyleBackColor = false;
