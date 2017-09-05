@@ -66,12 +66,6 @@ namespace AnimeList
         private void show_rating_option_Click(object sender, EventArgs e)
         {
             switch_table_options(false);
-            rating_chose.Visible = true;
-            if (rating_chose.SelectedIndex == 1)
-            {
-                rating_number_input.Visible = true;
-            }
-            rating_lable.Visible = true;
             add_category.Visible = true;
             category.Visible = true;
             check_category = true;
@@ -260,12 +254,12 @@ namespace AnimeList
             switch_table_options(true);
             table_title.Text = (sender as Button).Text;
             color_picker.BackColor = (sender as Button).BackColor;
-           
+
             string[] config = (sender as Button).Tag.ToString().Split('|');
             try
             {
                 rating.Checked = Boolean.Parse(config[0]);
-                
+
             }catch (NullReferenceException){}catch (FormatException){}catch (IndexOutOfRangeException) { }
             try{
                 episode_counter.Checked = Boolean.Parse(config[1]);
@@ -273,7 +267,7 @@ namespace AnimeList
             catch (NullReferenceException) { }
             catch (FormatException) { }
             catch (IndexOutOfRangeException) { }
-            try { 
+            try {
             design_bpx.SelectedIndex = Int32.Parse(config[3]);
             }
             catch (NullReferenceException) { }
@@ -287,6 +281,20 @@ namespace AnimeList
             {
                 show_episodes.Checked = Boolean.Parse(config[4]);
             }catch (NullReferenceException){}catch (FormatException){}catch (IndexOutOfRangeException) { }
+            try
+            {
+                if (config[5] == "")
+                {
+                    rating_number_input.Text = "10";
+                }
+                else
+                {
+                    rating_number_input.Text = config[5];
+                }
+            }
+            catch (NullReferenceException) { }
+            catch (FormatException) { }
+            catch (IndexOutOfRangeException) { }
         }
         private void Button_2_Click(object sender, EventArgs e)
         {
@@ -330,11 +338,18 @@ namespace AnimeList
             rating.Visible = state;
             episode_counter.Visible = state;
             remove_table.Visible = state;
+            if (rating_chose.SelectedIndex == 1)
+            {
+                rating_number_input.Visible = true;
+            }else
+            {
+                rating_number_input.Visible = false;
+            }
             add_category.Visible = false;
             category.Visible = false;
-            rating_number_input.Visible = false;
-            rating_chose.Visible = false;
-            rating_lable.Visible = false;
+            rating_number_input.Visible = state;
+            rating_chose.Visible = state;
+            rating_lable.Visible = state;
             if (state)
             {
 
@@ -369,14 +384,14 @@ namespace AnimeList
             string[] config = dgv.Tag.ToString().Split('|');
             if (rating.Checked)
             {
-                try { 
+                try {
                 config[0] = "TRUE";
                 }
                 catch (IndexOutOfRangeException) { }
             }
             else
             {
-                try { 
+                try {
                 config[0] = "FALSE";
                 }
                 catch (IndexOutOfRangeException) { }
@@ -633,6 +648,8 @@ namespace AnimeList
                 rating_number_input.Visible = false;
             }
             form_cache.rating_mode = rating_chose.SelectedIndex;
+
+            rating_change(rating_chose.SelectedIndex.ToString(), 2);
         }
 
         private void rating_number_input_TextChanged(object sender, EventArgs e)
@@ -652,8 +669,47 @@ namespace AnimeList
                     rating_number_input.Text = "10";
                 }
             }
+            rating_change(rating_number_input.Text, 5);
         }
+        private void rating_change(string change, int number)
+        {
+            DataGridView dgv = form_cache.Controls.Find("table_" + current_table_config.ToString(), true).FirstOrDefault() as DataGridView;
+            Button button = this.Controls.Find("options" + current_table_config.ToString(), true).FirstOrDefault() as Button;
+            try
+            {
+                string[] config = dgv.Tag.ToString().Split('|');
 
+                try
+                {
+                    config[number] = change;
+                }
+                catch (IndexOutOfRangeException)
+                {
+                    int x = 0;
+                    string config_s = "";
+                    while (x < form_cache.config_number)
+                    {
+                        config_s = config_s + "|";
+                        x++;
+                    }
+                }
+                string config_set = "";
+                foreach (string config_s in config)
+                {
+                    if (config_set == "")
+                    {
+                        config_set = config_s;
+                    }
+                    else
+                    {
+                        config_set = config_set + "|" + config_s;
+                    }
+                }
+                dgv.Tag = config_set;
+                button.Tag = config_set;
+            }
+            catch (NullReferenceException) { }
+        }
         private void design_bpx_SelectedIndexChanged(object sender, EventArgs e)
         {
             DataGridView dgv = form_cache.Controls.Find("table_" + current_table_config.ToString(), true).FirstOrDefault() as DataGridView;

@@ -1167,12 +1167,14 @@ namespace AnimeList
             {
                 configs[2] = "1";
             }
+            catch (IndexOutOfRangeException) { }
             create_table_button.Visible = false;
             starttitle.Visible = false;
             enable_anime_input();
             Button button = new Button();
             button.Name = list_id.ToString();
             button.Text = name;
+            button.Tag = config;
             button.BackColor = Color.FromArgb(r, g, b);
             button.Visible = true;
             button.FlatStyle = FlatStyle.Flat;
@@ -1495,31 +1497,36 @@ namespace AnimeList
                 if (e.ColumnIndex >= 2)
                 {
                     Debug.WriteLine("Checking rating mode");
-                    if (rating_mode == 1)
+                    string[] config= ((sender as DataGridView).Tag.ToString().Split('|'));
+                    try
                     {
-                        try
+                        if (Int32.Parse(config[2]) == 1)
                         {
-                            int cache = Int32.Parse((sender as DataGridView).Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString());
-                            Debug.WriteLine("Checking number complete");
-                            if (cache <= Int32.Parse(number_input.Text))
+                            try
                             {
-                                Debug.WriteLine("All OK");
+                                int cache = Int32.Parse((sender as DataGridView).Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString());
+                                Debug.WriteLine("Checking number complete");
+                                if (cache <= Int32.Parse(config[5]))
+                                {
+                                    Debug.WriteLine("All OK");
+
+                                }
+                                else
+                                {
+                                    (sender as DataGridView).Rows[e.RowIndex].Cells[e.ColumnIndex].Value = Int32.Parse(config[5]);
+                                }
+                            }
+                            catch (NullReferenceException)
+                            {
 
                             }
-                            else
+                            catch (System.FormatException)
                             {
-                                (sender as DataGridView).Rows[e.RowIndex].Cells[e.ColumnIndex].Value = number_input.Text;
+                                (sender as DataGridView).Rows[e.RowIndex].Cells[e.ColumnIndex].Value = 0;
                             }
-                        }
-                        catch (NullReferenceException)
-                        {
-
-                        }
-                        catch (System.FormatException)
-                        {
-                            (sender as DataGridView).Rows[e.RowIndex].Cells[e.ColumnIndex].Value = 0;
                         }
                     }
+                    catch (System.FormatException) { }
                     if (rating_mode == 2 || rating_mode == 3)
                     {
                         Debug.WriteLine("Save");
@@ -1627,15 +1634,21 @@ namespace AnimeList
         }
         public void save()
         {
-            saving_thread();
-            //Thread saving = new Thread(() => saving_thread());
-            //saving.Start();
+            //saving_thread();
+            if (is_loading)
+            {}
+            else
+            {
+                Debug.WriteLine("Starting new Thread");
+                Thread saving = new Thread(() => saving_thread());
+                saving.Start();
+            }
         }
         public void saving_thread()
         {
             if (!is_loading)
             {
-                Debug.WriteLine(path);
+                is_loading = true;
                 TextWriter t = new StreamWriter(path, true);
                 t.Write("");
                 t.Close();
@@ -1664,7 +1677,7 @@ namespace AnimeList
                         text += "b:" + dgv.ColumnHeadersDefaultCellStyle.BackColor.B.ToString() + Environment.NewLine;
                         int x_2 = 0;
                         text += "[TableRows]:" + Environment.NewLine;
-                        Debug.WriteLine("Readlines from " + bt.Text);
+                        Debug.WriteLine("Readlines from " + bt.Text + "("+ dgv.ColumnCount.ToString() +")");
                         while (x_2 <= dgv.RowCount + 1)
                         {
                             int x_3 = 0;
@@ -1690,6 +1703,7 @@ namespace AnimeList
                                         catch (NullReferenceException) { }
                                     }
                                     catch (ArgumentOutOfRangeException) { }
+                                    catch (NullReferenceException) { }
                                 }
                                 Debug.WriteLine("Read from " + bt.Text + ":" + x_2 + " " + x_3);
                                 try
@@ -1697,6 +1711,9 @@ namespace AnimeList
                                     row += dgv.Rows[x_2].Cells[x_3].Value.ToString().Replace(@":", "[<o>]") + "|";
                                 }
                                 catch (ArgumentOutOfRangeException) { }
+                                catch (NullReferenceException) {
+                                    row += "|";
+                                }
 
                                 x_3++;
                             }
@@ -1711,10 +1728,12 @@ namespace AnimeList
                     x++;
                 }
                 File.WriteAllText(path, text.ToString());
+                is_loading = false;
             }
         }
         public void load()
         {
+            is_loading = true;
             try
             {
                 var allLines = System.IO.File.ReadAllLines(path);
@@ -1842,10 +1861,10 @@ namespace AnimeList
                 button_true.Visible = false;
                 starttitle.Visible = false;
                 create_table_button.Visible = false;
-                is_loading = false;
                 enable_anime_input();
             }
             catch (FileNotFoundException) { }
+            is_loading = false;
         }
         public string mal_get_image(string text)
         {
@@ -1923,7 +1942,8 @@ namespace AnimeList
         }
         public void unload()
         {
-            save();
+            is_loading = false;
+            saving_thread();
             Categorys = null;
             rating_mode = 0;
             int x = 0;
